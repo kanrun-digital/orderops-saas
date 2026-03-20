@@ -9,3 +9,5 @@ export function useSystemAdmin() {
   };
 }
 export default useSystemAdmin;
+export const useIsSystemAdmin = useSystemAdmin;
+
