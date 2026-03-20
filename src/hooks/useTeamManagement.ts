@@ -11,3 +11,28 @@ export function useTeamManagement() {
   };
 }
 export default useTeamManagement;
+
+export function useTeamMembers() {
+  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+}
+export function useInviteTeamMember() {
+  return { mutate: (data: any) => {}, isLoading: false };
+}
+export function usePendingInvites() {
+  return { data: [] as any[], isLoading: false, refetch: () => {} };
+}
+export function useResendInvite() {
+  return { mutate: (id: string) => {}, isLoading: false };
+}
+export function useCancelInvite() {
+  return { mutate: (id: string) => {}, isLoading: false };
+}
+export function useRemoveMember() {
+  return { mutate: (id: string) => {}, isLoading: false };
+}
+export function useUpdateMemberRole() {
+  return { mutate: (data: any) => {}, isLoading: false };
+}
+export function useTransferOwnership() {
+  return { mutate: (userId: string) => {}, isLoading: false };
+}

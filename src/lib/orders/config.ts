@@ -13,3 +13,19 @@ export const statusMeta: Record<string, { label: string; color: string; icon?: s
   completed: { label: "Completed", color: "green" },
   cancelled: { label: "Cancelled", color: "red" },
 };
+
+export function getSourceLabel(source: string): string {
+  const labels: Record<string, string> = {
+    syrve: "Syrve", salesbox: "SalesBox", bolt: "Bolt", glovo: "Glovo",
+    wolt: "Wolt", manual: "Manual", website: "Website", qr: "QR Menu",
+  };
+  return labels[source] || source;
+}
+export function getSourceBadgeVariant(source: string): string {
+  const variants: Record<string, string> = {
+    syrve: "default", salesbox: "secondary", bolt: "outline",
+    glovo: "outline", wolt: "outline", manual: "secondary",
+  };
+  return variants[source] || "default";
+}
+export const statusOptions = orderConfig.statuses.map((s) => ({ value: s, label: s.charAt(0).toUpperCase() + s.slice(1) }));

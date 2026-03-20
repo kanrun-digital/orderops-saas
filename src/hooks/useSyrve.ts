@@ -32,3 +32,26 @@ export function useSyrveOrganizations() {
 export function useSyrveCredentials() {
   return { data: null as any, isLoading: false, error: null as Error | null };
 }
+
+export function useSyrveCouriersMultiOrg(orgIds?: string[]) {
+  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+}
+export function useSyrveCourierLocationsMultiOrg(orgIds?: string[]) {
+  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+}
+
+export function useSyrveAddresses(params?: any) {
+  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+}
+export function useSyrveAddressCount() {
+  return { data: 0, isLoading: false };
+}
+export function useSyrveAddressLookup(query?: string) {
+  return { data: [] as any[], isLoading: false };
+}
+export function useSyrveSyncRegions() {
+  return { mutate: () => {}, isLoading: false };
+}
+export function useSyrveSyncCities(regionId?: string) {
+  return { mutate: () => {}, isLoading: false };
+}
