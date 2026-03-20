@@ -7,3 +7,4 @@ export function formatDate(date: string | Date): string {
 export function formatRelative(date: string | Date): string {
   return new Date(date).toLocaleString();
 }
+export const formatDateFns = formatDate;
