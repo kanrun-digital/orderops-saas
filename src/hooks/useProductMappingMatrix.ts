@@ -1,4 +1,4 @@
-export function useProductMappingMatrix(params?: Record<string, unknown>) {
+export function useProductMappingMatrix(params?: any) {
   return {
     data: [] as unknown[],
     isLoading: false,
@@ -6,6 +6,8 @@ export function useProductMappingMatrix(params?: Record<string, unknown>) {
     error: null as Error | null,
     refetch: () => {},
     isFetching: false,
+    providerColumns: [] as string[],
+    getMappingStatus: (id: string) => "unmapped" as string,
   };
 }
 

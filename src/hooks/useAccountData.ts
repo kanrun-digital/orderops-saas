@@ -1,4 +1,4 @@
-export function useAccountData(params?: Record<string, unknown>) {
+export function useAccountData(params?: any) {
   return {
     data: [] as unknown[],
     isLoading: false,

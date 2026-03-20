@@ -1,4 +1,4 @@
-export function useCustomerSegments(params?: Record<string, unknown>) {
+export function useCustomerSegments(params?: any) {
   return {
     data: [] as unknown[],
     isLoading: false,

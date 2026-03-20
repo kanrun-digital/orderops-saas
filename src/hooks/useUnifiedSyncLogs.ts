@@ -1,4 +1,4 @@
-export function useUnifiedSyncLogs(params?: Record<string, unknown>) {
+export function useUnifiedSyncLogs(params?: any) {
   return {
     data: [] as unknown[],
     isLoading: false,

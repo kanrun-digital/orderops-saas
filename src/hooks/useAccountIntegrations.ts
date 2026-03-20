@@ -1,4 +1,4 @@
-export function useAccountIntegrations(params?: Record<string, unknown>) {
+export function useAccountIntegrations(params?: any) {
   return {
     data: [] as unknown[],
     isLoading: false,

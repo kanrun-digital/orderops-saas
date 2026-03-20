@@ -8,6 +8,6 @@ export function useSyncActions() {
 }
 export default useSyncActions;
 
-export function useSyncJobs(params?: Record<string, unknown>) {
+export function useSyncJobs(params?: any) {
   return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
 }

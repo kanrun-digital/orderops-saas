@@ -1,4 +1,4 @@
-export function useConnectionList(params?: Record<string, unknown>) {
+export function useConnectionList(params?: any) {
   return {
     data: [] as unknown[],
     isLoading: false,

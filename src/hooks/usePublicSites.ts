@@ -1,4 +1,4 @@
-export function usePublicSites(params?: Record<string, unknown>) {
+export function usePublicSites(params?: any) {
   return {
     data: [] as unknown[],
     isLoading: false,

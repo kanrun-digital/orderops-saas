@@ -1,4 +1,4 @@
-export function useCustomers(params?: Record<string, unknown>) {
+export function useCustomers(params?: any) {
   return {
     data: [] as unknown[],
     isLoading: false,
@@ -19,7 +19,7 @@ export function useCustomerOrders(customerId?: string) {
   return { data: [] as any[], isLoading: false, error: null as Error | null };
 }
 
-export function useNeedsReviewQueue(params?: Record<string, unknown>) {
+export function useNeedsReviewQueue(params?: any) {
   return { data: [] as any[], count: 0, isLoading: false, refetch: () => {} };
 }
 

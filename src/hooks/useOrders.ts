@@ -1,4 +1,4 @@
-export function useOrders(params?: Record<string, unknown>) {
+export function useOrders(params?: any) {
   return {
     data: [] as unknown[],
     isLoading: false,

@@ -1,4 +1,4 @@
-export function useOrderAssignments(params?: Record<string, unknown>) {
+export function useOrderAssignments(params?: any) {
   return {
     data: [] as unknown[],
     isLoading: false,

@@ -1,4 +1,4 @@
-export function useMenuSyncProviders(params?: Record<string, unknown>) {
+export function useMenuSyncProviders(params?: any) {
   return {
     data: [] as unknown[],
     isLoading: false,
@@ -6,6 +6,10 @@ export function useMenuSyncProviders(params?: Record<string, unknown>) {
     error: null as Error | null,
     refetch: () => {},
     isFetching: false,
+    providers: [] as any[],
+    exportProviders: [] as any[],
+    catalogProviders: [] as any[],
+    posProvider: null as any,
   };
 }
 

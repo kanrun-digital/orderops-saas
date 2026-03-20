@@ -1,4 +1,4 @@
-export function useCustomerMatchLog(params?: Record<string, unknown>) {
+export function useCustomerMatchLog(params?: any) {
   return {
     data: [] as unknown[],
     isLoading: false,
@@ -9,7 +9,7 @@ export function useCustomerMatchLog(params?: Record<string, unknown>) {
   };
 }
 
-export function useNeedsReviewQueue(params?: Record<string, unknown>) {
+export function useNeedsReviewQueue(params?: any) {
   return { data: [] as any[], count: 0, isLoading: false, refetch: () => {} };
 }
 export default useCustomerMatchLog;
