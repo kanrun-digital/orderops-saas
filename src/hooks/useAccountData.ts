@@ -10,3 +10,15 @@ export function useAccountData(params?: Record<string, unknown>) {
 }
 
 export default useAccountData;
+
+export function useCreateRestaurant() {
+  return { mutate: (data: any) => {}, isLoading: false };
+}
+
+export function useUpdateRestaurant() {
+  return { mutate: (data: any) => {}, isLoading: false };
+}
+
+export function useUpdateLocation() {
+  return { mutate: (data: any) => {}, isLoading: false };
+}

@@ -10,3 +10,7 @@ export function useCustomerSegments(params?: Record<string, unknown>) {
 }
 
 export default useCustomerSegments;
+
+export function useCustomerSegment(id?: string) {
+  return { data: null as any, isLoading: false, error: null as Error | null, refetch: () => {} };
+}

@@ -8,3 +8,7 @@ export function useBolt() {
   };
 }
 export default useBolt;
+
+export function useBoltOrderAction() {
+  return { mutate: (data: any) => {}, isLoading: false };
+}

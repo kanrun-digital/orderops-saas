@@ -1,6 +1,13 @@
 "use client";
 import React from "react";
 
+export interface SummaryItem {
+  label: string;
+  value: string | number;
+  change?: number;
+  trend?: "up" | "down" | "flat";
+}
+
 interface SummaryBarProps {
   className?: string;
   [key: string]: unknown;

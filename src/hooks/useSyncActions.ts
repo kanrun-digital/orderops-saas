@@ -7,3 +7,7 @@ export function useSyncActions() {
   };
 }
 export default useSyncActions;
+
+export function useSyncJobs(params?: Record<string, unknown>) {
+  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+}

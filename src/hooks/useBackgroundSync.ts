@@ -5,6 +5,19 @@ export function useBackgroundSync() {
     triggerSync: (type?: string) => {},
     cancelSync: () => {},
     progress: 0,
+    activeJobs: [] as any[],
   };
+}
+export function useStartBackgroundCustomerSync() {
+  return { mutate: () => {}, isLoading: false };
+}
+export function useStartBackgroundBitrixSync() {
+  return { mutate: () => {}, isLoading: false };
+}
+export function useStartBackgroundBitrixAutoMatch() {
+  return { mutate: () => {}, isLoading: false };
+}
+export function useCancelBackgroundSync(jobType?: string) {
+  return { mutate: () => {}, isLoading: false };
 }
 export default useBackgroundSync;

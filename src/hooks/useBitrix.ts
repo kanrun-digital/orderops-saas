@@ -10,3 +10,7 @@ export function useBitrix() {
   };
 }
 export default useBitrix;
+
+export function useBitrixUpdateOrderStatus() {
+  return { mutate: (data: any) => {}, isLoading: false };
+}

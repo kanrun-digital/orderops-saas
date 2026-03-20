@@ -7,3 +7,7 @@ export function getErrorMessage(error: unknown): string {
   return String(error);
 }
 export function isNotFoundError(error: unknown): boolean { return error instanceof AppError && error.code === "NOT_FOUND"; }
+
+export function toastError(message: string, error?: unknown): void {
+  console.error(message, error);
+}

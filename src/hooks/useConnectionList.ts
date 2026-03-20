@@ -10,3 +10,7 @@ export function useConnectionList(params?: Record<string, unknown>) {
 }
 
 export default useConnectionList;
+
+export function useProviderConnections(provider?: string) {
+  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+}

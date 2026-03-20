@@ -10,3 +10,31 @@ export function useOrders(params?: Record<string, unknown>) {
 }
 
 export default useOrders;
+
+export function useOrder(id?: string) {
+  return { data: null as any, isLoading: false, error: null as Error | null, refetch: () => {} };
+}
+
+export function useUpdateOrder() {
+  return { mutate: (data: any) => {}, isLoading: false };
+}
+
+export function useDeleteOrder() {
+  return { mutate: (id: string) => {}, isLoading: false };
+}
+
+export function useAssignOrder() {
+  return { mutate: (data: any) => {}, isLoading: false };
+}
+
+export function useOrderOperators() {
+  return { data: [] as any[], isLoading: false, error: null as Error | null };
+}
+
+export function useOrderAssignmentHistory(orderId?: string) {
+  return { data: [] as any[], isLoading: false };
+}
+
+export function useOrderAssignmentPermissions() {
+  return { canAssign: false, canReassign: false, canUnassign: false };
+}

@@ -9,3 +9,7 @@ export function useProfile() {
   };
 }
 export default useProfile;
+
+export function useUpdateProfile() {
+  return { mutate: (data: any) => {}, isLoading: false, error: null as Error | null };
+}

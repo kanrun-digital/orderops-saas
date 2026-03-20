@@ -9,3 +9,7 @@ export function useOrderPii(orderId: string) {
   };
 }
 export default useOrderPii;
+
+export function useCanViewPii() {
+  return { canView: false, isAdmin: false };
+}

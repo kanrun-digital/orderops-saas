@@ -8,3 +8,7 @@ export function useAccountSettings() {
   };
 }
 export default useAccountSettings;
+
+export function useUpdateAccountSettings() {
+  return { mutate: (data: any) => {}, isLoading: false, error: null as Error | null };
+}
