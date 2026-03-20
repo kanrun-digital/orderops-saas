@@ -1,6 +1,7 @@
 export function useAccountSettings() {
   return {
-    settings: {} as Record<string, unknown>,
+    data: {} as any,
+    settings: {} as any,
     isLoading: false,
     error: null as Error | null,
     updateSetting: (key: string, value: unknown) => {},
