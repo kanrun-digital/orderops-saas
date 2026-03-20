@@ -23,11 +23,12 @@ import {
 } from '@/hooks/usePublicSites';
 import { Plus } from 'lucide-react';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
-import { emptySiteForm, type SiteFormState } from './qr-menu/types';
-import { QrPreviewDialog } from './qr-menu/QrPreviewDialog';
-import { SitesTable } from './qr-menu/SitesTable';
-import { TablesSection } from './qr-menu/TablesSection';
-import { SiteFormDialog } from './qr-menu/SiteFormDialog';
+import { emptySiteForm, type SiteFormState } from './types';
+import { QrPreviewDialog } from './QrPreviewDialog';
+import { SitesTable } from './SitesTable';
+import { TablesSection } from './TablesSection';
+import { SiteFormDialog } from './SiteFormDialog';
+
 
 const t = (key: string) => key;
 
