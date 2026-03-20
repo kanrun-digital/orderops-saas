@@ -110,7 +110,7 @@ type OrdersPageQueryError = Error & {
 const shouldShowSourceChips = (sourceChipsLength: number, sourceFilter: string): boolean =>
   sourceChipsLength > 0 || sourceFilter !== 'all';
 
-export const buildVisibleSourceChips = (
+const buildVisibleSourceChips = (
   perSourceCounts: Record<string, number>,
   dynamicSourceOptions: Array<{ value: string; label: string }>,
   sourceFilter: string,
@@ -136,7 +136,7 @@ export const buildVisibleSourceChips = (
   }));
 };
 
-export const buildStatusChips = (
+const buildStatusChips = (
   perStatusCounts: Record<string, number>,
   tFn: (key: string) => string,
 ): FilterChip[] =>
@@ -146,7 +146,7 @@ export const buildStatusChips = (
     count: perStatusCounts[opt.value] ?? 0,
   }));
 
-export const buildDiscountChips = (
+const buildDiscountChips = (
   withDiscount: number,
   withoutDiscount: number,
   tFn: (key: string) => string,
