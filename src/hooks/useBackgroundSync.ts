@@ -9,17 +9,18 @@ export function useBackgroundSync() {
   };
 }
 export function useStartBackgroundCustomerSync() {
-  return { mutate: () => {}, mutateAsync: () => {}, isLoading: false, isPending: false };
+  return { mutate: (data?: any) => {}, mutateAsync: async (data?: any) => {}, isLoading: false, isPending: false };
 }
 export function useStartBackgroundBitrixSync() {
-  return { mutate: () => {}, mutateAsync: () => {}, isLoading: false, isPending: false };
+  return { mutate: (data?: any) => {}, mutateAsync: async (data?: any) => {}, isLoading: false, isPending: false };
 }
 export function useStartBackgroundBitrixAutoMatch() {
-  return { mutate: () => {}, mutateAsync: () => {}, isLoading: false, isPending: false };
+  return { mutate: (data?: any) => {}, mutateAsync: async (data?: any) => {}, isLoading: false, isPending: false };
 }
 export function useCancelBackgroundSync(jobType?: string) {
-  return { mutate: () => {}, mutateAsync: () => {}, isLoading: false, isPending: false };
+  return { mutate: (data?: any) => {}, mutateAsync: async (data?: any) => {}, isLoading: false, isPending: false };
 }
+
 export default useBackgroundSync;
 
 export function useActiveBackgroundSyncJobs() {
