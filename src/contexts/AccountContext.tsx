@@ -27,3 +27,4 @@ export function useAccountContext() {
 
 export { AccountContext };
 export default AccountContext;
+export const useAccount = useAccountContext;
