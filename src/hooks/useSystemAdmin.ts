@@ -5,9 +5,9 @@ export function useSystemAdmin() {
     isLoading: false,
     error: null as Error | null,
     isAdmin: false,
+    data: false,
     refetch: () => {},
   };
 }
 export default useSystemAdmin;
 export const useIsSystemAdmin = useSystemAdmin;
-
