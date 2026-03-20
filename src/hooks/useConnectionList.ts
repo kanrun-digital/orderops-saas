@@ -1,6 +1,6 @@
 export function useConnectionList(params?: any) {
   return {
-    data: [] as any[],
+    data: [] as any,
     isLoading: false,
     isError: false,
     error: null as Error | null,
@@ -14,7 +14,7 @@ export function useConnectionList(params?: any) {
 }
 
 export function useProviderConnections(provider?: string) {
-  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+  return { data: [] as any, isLoading: false, error: null as Error | null, refetch: () => {} };
 }
 
 export interface ConnectionListItem {

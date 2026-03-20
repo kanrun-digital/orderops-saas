@@ -1,6 +1,6 @@
 export function useSyncLogs(params?: any) {
   return {
-    data: [] as unknown[],
+    data: [] as any,
     isLoading: false,
     isError: false,
     error: null as Error | null,
@@ -11,5 +11,5 @@ export function useSyncLogs(params?: any) {
 
 export default useSyncLogs;
 export function useSyncJobs(params?: any) {
-  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+  return { data: [] as any, isLoading: false, error: null as Error | null, refetch: () => {} };
 }

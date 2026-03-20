@@ -1,6 +1,6 @@
 export function useSyrve() {
   return {
-    data: [] as unknown[],
+    data: [] as any,
     isLoading: false,
     error: null as Error | null,
     isConnected: false,
@@ -16,7 +16,7 @@ export function useSelectedSyrveOrganization() {
 }
 
 export function useSyrveTerminalGroups(orgId?: string) {
-  return { data: [] as any[], isLoading: false };
+  return { data: [] as any, isLoading: false };
 }
 
 export function useSyrveRefreshOrder() {
@@ -27,27 +27,27 @@ export function useLocationSyrveConfig(locationId?: string) {
   return { data: null as any, isLoading: false, error: null as Error | null };
 }
 export function useSyrveOrganizations() {
-  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+  return { data: [] as any, isLoading: false, error: null as Error | null, refetch: () => {} };
 }
 export function useSyrveCredentials() {
   return { data: null as any, isLoading: false, error: null as Error | null };
 }
 
 export function useSyrveCouriersMultiOrg(orgIds?: string[]) {
-  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+  return { data: [] as any, isLoading: false, error: null as Error | null, refetch: () => {} };
 }
 export function useSyrveCourierLocationsMultiOrg(orgIds?: string[]) {
-  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+  return { data: [] as any, isLoading: false, error: null as Error | null, refetch: () => {} };
 }
 
 export function useSyrveAddresses(params?: any) {
-  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+  return { data: [] as any, isLoading: false, error: null as Error | null, refetch: () => {} };
 }
 export function useSyrveAddressCount() {
-  return { data: 0, isLoading: false, isFetching: false, dataUpdatedAt: 0 };
+  return { data: 0 as any, isLoading: false, isFetching: false, dataUpdatedAt: 0 };
 }
 export function useSyrveAddressLookup(query?: string) {
-  return { data: [] as any[], isLoading: false };
+  return { data: [] as any, isLoading: false };
 }
 export function useSyrveSyncRegions() {
   return { mutate: () => {}, mutateAsync: () => {}, isLoading: false, isPending: false };

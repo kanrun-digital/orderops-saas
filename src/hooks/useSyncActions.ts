@@ -14,7 +14,7 @@ export function useSyncActions() {
 }
 
 export function useSyncJobs(params?: any) {
-  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+  return { data: [] as any, isLoading: false, error: null as Error | null, refetch: () => {} };
 }
 
 export default useSyncActions;

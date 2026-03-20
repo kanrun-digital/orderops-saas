@@ -1,6 +1,6 @@
 export function usePublicSites(params?: any) {
   return {
-    data: [] as unknown[],
+    data: [] as any,
     isLoading: false,
     isError: false,
     error: null as Error | null,
@@ -12,7 +12,7 @@ export function usePublicSites(params?: any) {
 export default usePublicSites;
 
 export function useDiningTables(siteId?: string) {
-  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+  return { data: [] as any, isLoading: false, error: null as Error | null, refetch: () => {} };
 }
 export function useCreatePublicSite() {
   return { mutate: (data: any) => {}, mutateAsync: (data: any) => {}, isLoading: false, isPending: false };

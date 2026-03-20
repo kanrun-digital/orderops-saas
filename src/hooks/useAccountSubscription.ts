@@ -12,7 +12,7 @@ export function useAccountSubscription(accountId?: string | null) {
       current_period_start: null,
       current_period_end: null,
       cancel_at_period_end: false,
-      metadata: {},
+      metadata: {} as any,
     } as any,
     isLoading: false,
     error: null as Error | null,

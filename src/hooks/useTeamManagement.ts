@@ -13,13 +13,13 @@ export function useTeamManagement() {
 export default useTeamManagement;
 
 export function useTeamMembers() {
-  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+  return { data: [] as any, isLoading: false, error: null as Error | null, refetch: () => {} };
 }
 export function useInviteTeamMember() {
   return { mutate: (data: any) => {}, mutateAsync: (data: any) => {}, isLoading: false, isPending: false };
 }
 export function usePendingInvites() {
-  return { data: [] as any[], isLoading: false, refetch: () => {} };
+  return { data: [] as any, isLoading: false, refetch: () => {} };
 }
 export function useResendInvite() {
   return { mutate: (data: any) => {}, mutateAsync: async (data: any) => {}, isLoading: false, isPending: false };

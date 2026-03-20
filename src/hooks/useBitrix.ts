@@ -1,6 +1,6 @@
 export function useBitrix() {
   return {
-    data: [] as unknown[],
+    data: [] as any,
     isLoading: false,
     error: null as Error | null,
     isConnected: false,

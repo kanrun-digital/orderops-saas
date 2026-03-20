@@ -1,6 +1,6 @@
 export function useCustomerMatchLog(params?: any) {
   return {
-    data: [] as unknown[],
+    data: [] as any,
     isLoading: false,
     isError: false,
     error: null as Error | null,
@@ -10,6 +10,6 @@ export function useCustomerMatchLog(params?: any) {
 }
 
 export function useNeedsReviewQueue(params?: any) {
-  return { data: [] as any[], count: 0, isLoading: false, refetch: () => {} };
+  return { data: [] as any, count: 0, isLoading: false, refetch: () => {} };
 }
 export default useCustomerMatchLog;

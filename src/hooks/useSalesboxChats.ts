@@ -1,5 +1,5 @@
 export function useSalesboxChatMessages(chatId?: string | null) {
-  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+  return { data: [] as any, isLoading: false, error: null as Error | null, refetch: () => {} };
 }
 export function useSalesboxMarkChatRead() {
   return { mutate: (data: any) => {}, mutateAsync: async (data: any) => {}, isLoading: false, isPending: false };
@@ -10,7 +10,7 @@ export function useSalesboxSendMessage() {
 export function useSalesboxChats(params?: any) {
 
   return {
-    data: [] as unknown[],
+    data: [] as any,
     isLoading: false,
     isError: false,
     error: null as Error | null,

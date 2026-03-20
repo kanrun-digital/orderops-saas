@@ -8,6 +8,6 @@ export function useCustomerDataOps() {
   };
 }
 export function useProviderConnections(provider?: string) {
-  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+  return { data: [] as any, isLoading: false, error: null as Error | null, refetch: () => {} };
 }
 export default useCustomerDataOps;

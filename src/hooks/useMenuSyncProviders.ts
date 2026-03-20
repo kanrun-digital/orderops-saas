@@ -1,6 +1,6 @@
 export function useMenuSyncProviders(params?: any) {
   return {
-    data: [] as unknown[],
+    data: [] as any,
     isLoading: false,
     isError: false,
     error: null as Error | null,

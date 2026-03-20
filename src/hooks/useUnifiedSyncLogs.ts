@@ -1,6 +1,6 @@
 export function useUnifiedSyncLogs(params?: any) {
   return {
-    data: [] as any[],
+    data: [] as any,
     logs: [] as any[],
     isLoading: false,
     isError: false,

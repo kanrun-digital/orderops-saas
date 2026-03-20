@@ -1,6 +1,6 @@
 export function useOrders(params?: any) {
   return {
-    data: [] as unknown[],
+    data: [] as any,
     isLoading: false,
     isError: false,
     error: null as Error | null,
@@ -28,11 +28,11 @@ export function useAssignOrder() {
 }
 
 export function useOrderOperators() {
-  return { data: [] as any[], isLoading: false, error: null as Error | null };
+  return { data: [] as any, isLoading: false, error: null as Error | null };
 }
 
 export function useOrderAssignmentHistory(orderId?: string) {
-  return { data: [] as any[], isLoading: false };
+  return { data: [] as any, isLoading: false };
 }
 
 export function useOrderAssignmentPermissions() {
