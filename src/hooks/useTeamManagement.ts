@@ -22,17 +22,17 @@ export function usePendingInvites() {
   return { data: [] as any[], isLoading: false, refetch: () => {} };
 }
 export function useResendInvite() {
-  return { mutate: (id: string) => {}, mutateAsync: (id: string) => {}, isLoading: false, isPending: false };
+  return { mutate: (data: any) => {}, mutateAsync: async (data: any) => {}, isLoading: false, isPending: false };
 }
 export function useCancelInvite() {
-  return { mutate: (id: string) => {}, mutateAsync: (id: string) => {}, isLoading: false, isPending: false };
+  return { mutate: (data: any) => {}, mutateAsync: async (data: any) => {}, isLoading: false, isPending: false };
 }
 export function useRemoveMember() {
-  return { mutate: (id: string) => {}, mutateAsync: (id: string) => {}, isLoading: false, isPending: false };
+  return { mutate: (data: any) => {}, mutateAsync: async (data: any) => {}, isLoading: false, isPending: false };
 }
 export function useUpdateMemberRole() {
   return { mutate: (data: any) => {}, mutateAsync: (data: any) => {}, isLoading: false, isPending: false };
 }
 export function useTransferOwnership() {
-  return { mutate: (userId: string) => {}, mutateAsync: (userId: string) => {}, isLoading: false, isPending: false };
+  return { mutate: (data: any) => {}, mutateAsync: async (data: any) => {}, isLoading: false, isPending: false };
 }

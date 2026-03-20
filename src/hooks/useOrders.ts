@@ -20,7 +20,7 @@ export function useUpdateOrder() {
 }
 
 export function useDeleteOrder() {
-  return { mutate: (id: string) => {}, mutateAsync: (id: string) => {}, isLoading: false, isPending: false };
+  return { mutate: (data: any) => {}, mutateAsync: async (data: any) => {}, isLoading: false, isPending: false };
 }
 
 export function useAssignOrder() {

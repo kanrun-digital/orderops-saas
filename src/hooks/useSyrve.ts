@@ -20,7 +20,7 @@ export function useSyrveTerminalGroups(orgId?: string) {
 }
 
 export function useSyrveRefreshOrder() {
-  return { mutate: (orderId: string) => {}, mutateAsync: (orderId: string) => {}, isLoading: false, isPending: false };
+  return { mutate: (data: any) => {}, mutateAsync: async (data: any) => {}, isLoading: false, isPending: false };
 }
 
 export function useLocationSyrveConfig(locationId?: string) {
