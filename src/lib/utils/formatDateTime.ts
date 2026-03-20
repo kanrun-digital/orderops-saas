@@ -7,7 +7,10 @@ export function formatDate(date: string | Date): string {
 export function formatRelative(date: string | Date): string {
   return new Date(date).toLocaleString();
 }
-export const formatDateFns = formatDate;
+export function formatDateFns(date: string | Date, formatStr?: string, locale?: string): string {
+  return new Date(date).toLocaleDateString();
+}
+
 
 export function formatDistanceToNowLocalized(date: string | Date, locale?: string): string {
   const now = Date.now();
