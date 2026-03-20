@@ -4,4 +4,8 @@ export const contactConfig = {
   telegramBot: "",
   websiteUrl: "",
 };
+export function getSupportContactEmail() {
+  return contactConfig.supportEmail || "support@example.com";
+}
+
 export default contactConfig;
