@@ -107,7 +107,7 @@ type OrdersPageQueryError = Error & {
   traceId?: string;
 };
 
-export const shouldShowSourceChips = (sourceChipsLength: number, sourceFilter: string): boolean =>
+const shouldShowSourceChips = (sourceChipsLength: number, sourceFilter: string): boolean =>
   sourceChipsLength > 0 || sourceFilter !== 'all';
 
 export const buildVisibleSourceChips = (
