@@ -20,3 +20,16 @@ export interface TableItem {
   status: string;
   [key: string]: any;
 }
+
+export interface SiteFormState {
+  name: string;
+  slug: string;
+  status: string;
+  settings?: any;
+}
+
+export const emptySiteForm: SiteFormState = {
+  name: "",
+  slug: "",
+  status: "draft",
+};
