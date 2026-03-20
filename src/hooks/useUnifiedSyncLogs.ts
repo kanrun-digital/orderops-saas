@@ -1,6 +1,7 @@
 export function useUnifiedSyncLogs(params?: any) {
   return {
-    data: [] as unknown[],
+    data: [] as any[],
+    logs: [] as any[],
     isLoading: false,
     isError: false,
     error: null as Error | null,
@@ -8,8 +9,6 @@ export function useUnifiedSyncLogs(params?: any) {
     isFetching: false,
   };
 }
-
-export default useUnifiedSyncLogs;
 
 export interface UnifiedSyncLog {
   id: string;
@@ -21,3 +20,5 @@ export interface UnifiedSyncLog {
   error_message?: string;
   records_processed?: number;
 }
+
+export default useUnifiedSyncLogs;

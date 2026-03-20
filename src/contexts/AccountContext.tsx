@@ -5,12 +5,32 @@ interface AccountContextType {
   accountId: string | null;
   account: any;
   currentAccount: any;
+  currentLocation: any;
+  currentRestaurant: any;
+  currentRole: string | null;
+  loading: boolean;
+  locations: any[];
+  restaurants: any[];
+  refreshAccounts: () => void;
 }
 
-const AccountContext = createContext<AccountContextType>({ accountId: null, account: null, currentAccount: null });
+const defaultValue: AccountContextType = {
+  accountId: null,
+  account: null,
+  currentAccount: null,
+  currentLocation: null,
+  currentRestaurant: null,
+  currentRole: null,
+  loading: false,
+  locations: [],
+  restaurants: [],
+  refreshAccounts: () => {},
+};
+
+const AccountContext = createContext<AccountContextType>(defaultValue);
 
 export function AccountProvider({ children }: { children: ReactNode }) {
-  return <AccountContext.Provider value={{ accountId: null, account: null, currentAccount: null }}>{children}</AccountContext.Provider>;
+  return <AccountContext.Provider value={defaultValue}>{children}</AccountContext.Provider>;
 }
 
 export function useAccountContext() {

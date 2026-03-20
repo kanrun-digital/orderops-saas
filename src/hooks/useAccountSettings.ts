@@ -8,8 +8,9 @@ export function useAccountSettings() {
     refetch: () => {},
   };
 }
-export default useAccountSettings;
 
 export function useUpdateAccountSettings() {
-  return { mutate: (data: any) => {}, mutateAsync: (data: any) => {}, isLoading: false, isPending: false, error: null as Error | null };
+  return { mutate: (data: any) => {}, mutateAsync: async (data: any) => {}, isLoading: false, isPending: false, error: null as Error | null };
 }
+
+export default useAccountSettings;

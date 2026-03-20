@@ -44,7 +44,7 @@ export function useSyrveAddresses(params?: any) {
   return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
 }
 export function useSyrveAddressCount() {
-  return { data: 0, isLoading: false };
+  return { data: 0, isLoading: false, isFetching: false, dataUpdatedAt: 0 };
 }
 export function useSyrveAddressLookup(query?: string) {
   return { data: [] as any[], isLoading: false };
