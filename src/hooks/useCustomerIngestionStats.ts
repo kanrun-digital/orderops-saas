@@ -1,0 +1,9 @@
+export function useCustomerIngestionStats() {
+  return {
+    data: { total: 0, ingested: 0, matched: 0, unmatched: 0, duplicates: 0 },
+    isLoading: false,
+    error: null as Error | null,
+    refetch: () => {},
+  };
+}
+export default useCustomerIngestionStats;

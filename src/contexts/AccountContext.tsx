@@ -1,19 +1,29 @@
 "use client";
-import { createContext, useContext } from "react";
+import React, { createContext, useContext, type ReactNode } from "react";
 
 interface AccountContextType {
   accountId: string | null;
-  account: any;
+  accountName: string | null;
+  isLoading: boolean;
 }
 
-const AccountContext = createContext<AccountContextType>({ accountId: null, account: null });
+const AccountContext = createContext<AccountContextType>({
+  accountId: null,
+  accountName: null,
+  isLoading: false,
+});
 
-export function useAccount() {
+export function AccountProvider({ children }: { children: ReactNode }) {
+  return (
+    <AccountContext.Provider value={{ accountId: null, accountName: null, isLoading: false }}>
+      {children}
+    </AccountContext.Provider>
+  );
+}
+
+export function useAccountContext() {
   return useContext(AccountContext);
 }
 
-export function AccountProvider({ children }: { children: any }) {
-  return <AccountContext.Provider value={{ accountId: null, account: null }}>{children}</AccountContext.Provider>;
-}
-
+export { AccountContext };
 export default AccountContext;
