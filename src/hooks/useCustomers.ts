@@ -1,6 +1,6 @@
 export function useCustomers(params?: any) {
   return {
-    data: [] as unknown[],
+    data: { customers: [] as any[], total: 0, page: 1, pageSize: 20 } as any,
     isLoading: false,
     isError: false,
     error: null as Error | null,
