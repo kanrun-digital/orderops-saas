@@ -9,4 +9,7 @@ export function useCustomerMatchLog(params?: Record<string, unknown>) {
   };
 }
 
+export function useNeedsReviewQueue(params?: Record<string, unknown>) {
+  return { data: [] as any[], count: 0, isLoading: false, refetch: () => {} };
+}
 export default useCustomerMatchLog;

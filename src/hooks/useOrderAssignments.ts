@@ -9,4 +9,16 @@ export function useOrderAssignments(params?: Record<string, unknown>) {
   };
 }
 
+export function useAssignOrder() {
+  return { mutate: (data: any) => {}, isLoading: false };
+}
+export function useOrderOperators() {
+  return { data: [] as any[], isLoading: false, error: null as Error | null };
+}
+export function useOrderAssignmentHistory(orderId?: string) {
+  return { data: [] as any[], isLoading: false };
+}
+export function useOrderAssignmentPermissions() {
+  return { canAssign: false, canReassign: false, canUnassign: false };
+}
 export default useOrderAssignments;

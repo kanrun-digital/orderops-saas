@@ -10,3 +10,6 @@ export function useSyncLogs(params?: Record<string, unknown>) {
 }
 
 export default useSyncLogs;
+export function useSyncJobs(params?: Record<string, unknown>) {
+  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+}

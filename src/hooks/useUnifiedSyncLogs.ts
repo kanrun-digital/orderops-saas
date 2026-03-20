@@ -10,3 +10,14 @@ export function useUnifiedSyncLogs(params?: Record<string, unknown>) {
 }
 
 export default useUnifiedSyncLogs;
+
+export interface UnifiedSyncLog {
+  id: string;
+  job_type: string;
+  status: string;
+  started_at?: string;
+  finished_at?: string;
+  created_at: string;
+  error_message?: string;
+  records_processed?: number;
+}

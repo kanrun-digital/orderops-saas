@@ -15,3 +15,10 @@ export function FilterChips({ className, ...props }: FilterChipsProps) {
 }
 
 export default FilterChips;
+
+export interface FilterChip {
+  key: string;
+  label: string;
+  value: string;
+  onRemove?: () => void;
+}

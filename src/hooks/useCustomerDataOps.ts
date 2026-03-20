@@ -7,4 +7,7 @@ export function useCustomerDataOps() {
     error: null as Error | null,
   };
 }
+export function useProviderConnections(provider?: string) {
+  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+}
 export default useCustomerDataOps;

@@ -26,3 +26,9 @@ export function useSyrveRefreshOrder() {
 export function useLocationSyrveConfig(locationId?: string) {
   return { data: null as any, isLoading: false, error: null as Error | null };
 }
+export function useSyrveOrganizations() {
+  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+}
+export function useSyrveCredentials() {
+  return { data: null as any, isLoading: false, error: null as Error | null };
+}

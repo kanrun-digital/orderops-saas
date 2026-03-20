@@ -15,3 +15,11 @@ export function SourceProductsTable({ className, ...props }: SourceProductsTable
 }
 
 export default SourceProductsTable;
+
+export interface SourceProduct {
+  id: string;
+  external_id: string;
+  name: string;
+  provider: string;
+  price?: number;
+}

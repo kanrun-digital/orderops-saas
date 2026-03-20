@@ -15,3 +15,12 @@ export function RowActionsMenu({ className, ...props }: RowActionsMenuProps) {
 }
 
 export default RowActionsMenu;
+
+export interface RowAction {
+  key: string;
+  label: string;
+  icon?: any;
+  onClick: () => void;
+  variant?: 'default' | 'destructive';
+  disabled?: boolean;
+}

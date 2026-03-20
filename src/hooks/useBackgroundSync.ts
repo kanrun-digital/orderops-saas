@@ -21,3 +21,7 @@ export function useCancelBackgroundSync(jobType?: string) {
   return { mutate: () => {}, isLoading: false };
 }
 export default useBackgroundSync;
+
+export function useActiveBackgroundSyncJobs() {
+  return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
+}
