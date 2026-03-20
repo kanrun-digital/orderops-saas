@@ -2,8 +2,9 @@ export function useSalesboxChatMessages(chatId?: string | null) {
   return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
 }
 export function useSalesboxMarkChatRead() {
-  return { mutate: (chatId: string) => {}, isLoading: false };
+  return { mutate: (chatId: string) => {}, isLoading: false, isPending: false };
 }
+
 export function useSalesboxSendMessage() {
   return { mutate: (data: any) => {}, isLoading: false };
 }
