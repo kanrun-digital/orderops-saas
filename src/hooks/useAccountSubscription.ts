@@ -1,6 +1,11 @@
-export function useAccountSubscription() {
+export function useAccountSubscription(accountId?: string | null) {
+  const subscription = {
+    plan: "free",
+    status: "active",
+    expiresAt: "",
+  };
   return {
-    subscription: null as { plan: string; status: string; expiresAt: string } | null,
+    data: subscription,
     isLoading: false,
     error: null as Error | null,
     isPro: false,
