@@ -3,6 +3,7 @@ export function useAccountSubscription(accountId?: string | null) {
     plan: "free",
     status: "active",
     expiresAt: "",
+    provider: "manual",
   };
   return {
     data: subscription,
