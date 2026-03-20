@@ -7,7 +7,8 @@ export function useSalesboxMarkChatRead() {
 export function useSalesboxSendMessage() {
   return { mutate: (data: any) => {}, isLoading: false };
 }
-export function useSalesboxChats(params?: Record<string, unknown>) {
+export function useSalesboxChats(params?: any) {
+
   return {
     data: [] as unknown[],
     isLoading: false,
