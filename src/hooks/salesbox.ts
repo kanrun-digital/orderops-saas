@@ -10,9 +10,9 @@ export function useSalesboxChatsData() {
 export default { useSalesboxOrders, useSalesboxCustomers, useSalesboxChatsData };
 
 export function useSalesboxClearCustomers() {
-  return { mutate: () => {}, isLoading: false };
+  return { mutate: () => {}, mutateAsync: () => {}, isLoading: false, isPending: false };
 }
 
 export function useSalesboxUpdateOrderStatus() {
-  return { mutate: (data: any) => {}, isLoading: false };
+  return { mutate: (data: any) => {}, mutateAsync: (data: any) => {}, isLoading: false, isPending: false };
 }

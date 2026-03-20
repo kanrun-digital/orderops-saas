@@ -20,7 +20,7 @@ export function useSyrveTerminalGroups(orgId?: string) {
 }
 
 export function useSyrveRefreshOrder() {
-  return { mutate: (orderId: string) => {}, isLoading: false };
+  return { mutate: (orderId: string) => {}, mutateAsync: (orderId: string) => {}, isLoading: false, isPending: false };
 }
 
 export function useLocationSyrveConfig(locationId?: string) {
@@ -50,8 +50,8 @@ export function useSyrveAddressLookup(query?: string) {
   return { data: [] as any[], isLoading: false };
 }
 export function useSyrveSyncRegions() {
-  return { mutate: () => {}, isLoading: false };
+  return { mutate: () => {}, mutateAsync: () => {}, isLoading: false, isPending: false };
 }
 export function useSyrveSyncCities(regionId?: string) {
-  return { mutate: () => {}, isLoading: false };
+  return { mutate: () => {}, mutateAsync: () => {}, isLoading: false, isPending: false };
 }

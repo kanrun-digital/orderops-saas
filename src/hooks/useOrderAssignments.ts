@@ -10,7 +10,7 @@ export function useOrderAssignments(params?: any) {
 }
 
 export function useAssignOrder() {
-  return { mutate: (data: any) => {}, isLoading: false };
+  return { mutate: (data: any) => {}, mutateAsync: (data: any) => {}, isLoading: false, isPending: false };
 }
 export function useOrderOperators() {
   return { data: [] as any[], isLoading: false, error: null as Error | null };

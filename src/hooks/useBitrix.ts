@@ -12,5 +12,5 @@ export function useBitrix() {
 export default useBitrix;
 
 export function useBitrixUpdateOrderStatus() {
-  return { mutate: (data: any) => {}, isLoading: false };
+  return { mutate: (data: any) => {}, mutateAsync: (data: any) => {}, isLoading: false, isPending: false };
 }

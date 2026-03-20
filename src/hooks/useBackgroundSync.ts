@@ -9,16 +9,16 @@ export function useBackgroundSync() {
   };
 }
 export function useStartBackgroundCustomerSync() {
-  return { mutate: () => {}, isLoading: false };
+  return { mutate: () => {}, mutateAsync: () => {}, isLoading: false, isPending: false };
 }
 export function useStartBackgroundBitrixSync() {
-  return { mutate: () => {}, isLoading: false };
+  return { mutate: () => {}, mutateAsync: () => {}, isLoading: false, isPending: false };
 }
 export function useStartBackgroundBitrixAutoMatch() {
-  return { mutate: () => {}, isLoading: false };
+  return { mutate: () => {}, mutateAsync: () => {}, isLoading: false, isPending: false };
 }
 export function useCancelBackgroundSync(jobType?: string) {
-  return { mutate: () => {}, isLoading: false };
+  return { mutate: () => {}, mutateAsync: () => {}, isLoading: false, isPending: false };
 }
 export default useBackgroundSync;
 

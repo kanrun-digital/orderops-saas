@@ -16,23 +16,23 @@ export function useTeamMembers() {
   return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
 }
 export function useInviteTeamMember() {
-  return { mutate: (data: any) => {}, isLoading: false };
+  return { mutate: (data: any) => {}, mutateAsync: (data: any) => {}, isLoading: false, isPending: false };
 }
 export function usePendingInvites() {
   return { data: [] as any[], isLoading: false, refetch: () => {} };
 }
 export function useResendInvite() {
-  return { mutate: (id: string) => {}, isLoading: false };
+  return { mutate: (id: string) => {}, mutateAsync: (id: string) => {}, isLoading: false, isPending: false };
 }
 export function useCancelInvite() {
-  return { mutate: (id: string) => {}, isLoading: false };
+  return { mutate: (id: string) => {}, mutateAsync: (id: string) => {}, isLoading: false, isPending: false };
 }
 export function useRemoveMember() {
-  return { mutate: (id: string) => {}, isLoading: false };
+  return { mutate: (id: string) => {}, mutateAsync: (id: string) => {}, isLoading: false, isPending: false };
 }
 export function useUpdateMemberRole() {
-  return { mutate: (data: any) => {}, isLoading: false };
+  return { mutate: (data: any) => {}, mutateAsync: (data: any) => {}, isLoading: false, isPending: false };
 }
 export function useTransferOwnership() {
-  return { mutate: (userId: string) => {}, isLoading: false };
+  return { mutate: (userId: string) => {}, mutateAsync: (userId: string) => {}, isLoading: false, isPending: false };
 }

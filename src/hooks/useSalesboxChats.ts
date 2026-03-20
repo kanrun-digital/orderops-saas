@@ -2,11 +2,10 @@ export function useSalesboxChatMessages(chatId?: string | null) {
   return { data: [] as any[], isLoading: false, error: null as Error | null, refetch: () => {} };
 }
 export function useSalesboxMarkChatRead() {
-  return { mutate: (chatId: string) => {}, isLoading: false, isPending: false };
+  return { mutate: (chatId: string) => {}, mutateAsync: (chatId: string) => {}, isLoading: false, isPending: false };
 }
-
 export function useSalesboxSendMessage() {
-  return { mutate: (data: any) => {}, isLoading: false };
+  return { mutate: (data: any) => {}, mutateAsync: (data: any) => {}, isLoading: false, isPending: false };
 }
 export function useSalesboxChats(params?: any) {
 

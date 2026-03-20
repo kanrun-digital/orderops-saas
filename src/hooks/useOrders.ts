@@ -16,15 +16,15 @@ export function useOrder(id?: string) {
 }
 
 export function useUpdateOrder() {
-  return { mutate: (data: any) => {}, isLoading: false };
+  return { mutate: (data: any) => {}, mutateAsync: (data: any) => {}, isLoading: false, isPending: false };
 }
 
 export function useDeleteOrder() {
-  return { mutate: (id: string) => {}, isLoading: false };
+  return { mutate: (id: string) => {}, mutateAsync: (id: string) => {}, isLoading: false, isPending: false };
 }
 
 export function useAssignOrder() {
-  return { mutate: (data: any) => {}, isLoading: false };
+  return { mutate: (data: any) => {}, mutateAsync: (data: any) => {}, isLoading: false, isPending: false };
 }
 
 export function useOrderOperators() {
