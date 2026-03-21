@@ -15,7 +15,7 @@ export function useSelectedSyrveOrganization() {
   return { data: null as any, isLoading: false, select: (id: string) => {} };
 }
 
-export function useSyrveTerminalGroups(orgId?: string) {
+export function useSyrveTerminalGroups(orgId?: string | string[]) {
   return { data: [] as any, isLoading: false };
 }
 
