@@ -504,10 +504,10 @@ export default function OrdersPage() {
 
       if (
         response?.orderInfo?.creationStatus &&
-        (response.orderInfo.creationStatus ?? 'unknown').toLowerCase() !== 'success'
+        (response?.orderInfo?.creationStatus ?? 'unknown').toLowerCase() !== 'success'
       ) {
         throw createLocalizedError('orders.errors.syrveStatus', {
-          status: response.orderInfo.creationStatus ?? 'unknown',
+          status: response?.orderInfo?.creationStatus ?? 'unknown',
         });
       }
 
@@ -667,9 +667,9 @@ export default function OrdersPage() {
                 errorInfo.description || errorInfo.message || t('orders.errors.syrveUnknown'),
             });
           }
-          if (response?.orderInfo?.creationStatus?.toLowerCase() !== 'success') {
+          if ((response?.orderInfo?.creationStatus ?? 'unknown').toLowerCase() !== 'success') {
             throw createLocalizedError('orders.errors.syrveStatus', {
-              status: response.orderInfo.creationStatus ?? 'unknown',
+              status: response?.orderInfo?.creationStatus ?? 'unknown',
             });
           }
           const syrveOrderId = response?.orderInfo?.order?.id ?? response?.orderInfo?.id;
