@@ -1,0 +1,38 @@
+# Dependencies
+node_modules
+
+# Next.js build artifacts
+.next
+out
+
+# VCS
+.git
+
+# Environment files
+.env*
+
+# Logs
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+logs
+log
+
+# Test coverage
+coverage
+
+# Build and cache artifacts
+dist
+build
+.cache
+.turbo
+
+# Temporary files
+tmp
+temp
+*.tmp
+*.dump
+
+# OS/editor noise
+.DS_Store
