@@ -56,12 +56,47 @@ export function useSyrveAddressCount(level?: 'region' | 'city' | 'street') {
   void level;
   return { data: 0 as any, isLoading: false, isFetching: false, dataUpdatedAt: 0 };
 }
+type SyrveAddressLookupVariables = {
+  cityName?: string;
+  organizationId?: string;
+};
+
+type SyrveAddressLookupResult = {
+  cities: unknown[];
+};
+
 export function useSyrveAddressLookup(query?: string) {
-  return { data: [] as any, isLoading: false };
+  void query;
+
+  const result: SyrveAddressLookupResult = { cities: [] };
+
+  return {
+    data: result,
+    mutate: (_variables?: SyrveAddressLookupVariables) => result,
+    mutateAsync: async (_variables?: SyrveAddressLookupVariables): Promise<SyrveAddressLookupResult> => result,
+    isLoading: false,
+    isPending: false,
+  };
 }
+type SyrveSyncResult = {
+  count?: number;
+};
+
 export function useSyrveSyncRegions() {
-  return { mutate: () => {}, mutateAsync: () => {}, isLoading: false, isPending: false };
+  return {
+    mutate: (_organizationId?: string) => undefined,
+    mutateAsync: async (_organizationId?: string): Promise<SyrveSyncResult> => ({ count: 0 }),
+    isLoading: false,
+    isPending: false,
+  };
 }
 export function useSyrveSyncCities(regionId?: string) {
-  return { mutate: () => {}, mutateAsync: () => {}, isLoading: false, isPending: false };
+  void regionId;
+
+  return {
+    mutate: (_organizationId?: string) => undefined,
+    mutateAsync: async (_organizationId?: string): Promise<SyrveSyncResult> => ({ count: 0 }),
+    isLoading: false,
+    isPending: false,
+  };
 }
