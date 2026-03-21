@@ -1,10 +1,16 @@
+import { useLanguageContext } from "@/contexts/LanguageContext";
+
 export function useLanguageSwitcher() {
+  const context = useLanguageContext();
+
   return {
-    currentLanguage: "en" as string,
-    changeLanguage: (lang: string) => {},
-    languages: ["en", "ru", "uk"] as string[],
+    currentLanguage: context.currentLanguage,
+    changeLanguage: context.changeLanguage,
+    languages: context.languages,
+    copy: context.copy,
     t: (key: string) => key,
-    isLoading: false,
+    isLoading: context.isLoading,
   };
 }
+
 export default useLanguageSwitcher;

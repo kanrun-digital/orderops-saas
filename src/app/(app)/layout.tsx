@@ -151,10 +151,10 @@ export default function AppLayout({
           <div className="flex-1" />
           <div className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium text-primary">
-              {profile?.display_name?.charAt(0)?.toUpperCase() || "U"}
+              {(profile?.display_name || profile?.full_name)?.charAt(0)?.toUpperCase() || "U"}
             </div>
             <span className="hidden text-sm font-medium md:inline">
-              {profile?.display_name || "User"}
+              {profile?.display_name || profile?.full_name || "User"}
             </span>
           </div>
         </header>

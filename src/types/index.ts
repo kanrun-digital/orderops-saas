@@ -11,10 +11,20 @@ export interface NcbEntity {
 
 export interface Account extends NcbEntity {
   name: string;
-  status: "active" | "inactive" | "suspended";
-  plan: string;
-  logo_url?: string;
-  settings?: Record<string, any>;
+  slug: string;
+  activation_status: string;
+  is_active: number;
+  settings?: string | Record<string, any> | null;
+  company_name?: string | null;
+  contact_email?: string | null;
+  contact_phone?: string | null;
+  business_type?: string | null;
+  business_address?: string | null;
+  business_coordinates?: string | null;
+  tax_id?: string | null;
+  activated_at?: string | null;
+  activated_by?: string | null;
+  rejection_reason?: string | null;
 }
 
 // ── Account User (join table) ──────────────────
@@ -22,19 +32,17 @@ export interface Account extends NcbEntity {
 export interface AccountUser extends NcbEntity {
   account_id: string;
   user_id: string;
-  email: string;
   role: "owner" | "admin" | "manager" | "staff" | "driver";
+  is_active: number;
 }
 
 // ── Profile ────────────────────────────────────
 
 export interface Profile extends NcbEntity {
-  account_id: string;
   email: string;
-  display_name: string;
-  avatar_url?: string;
-  phone?: string;
-  language?: string;
+  full_name: string;
+  avatar_url?: string | null;
+  display_name?: string;
 }
 
 // ── Customer ───────────────────────────────────
