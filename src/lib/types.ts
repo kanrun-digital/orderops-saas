@@ -30,6 +30,7 @@ export interface MenuProductExtended extends MenuProduct {
   modifiers?: any[];
   weight?: number | string | null;
   sku?: string | null;
+  unit?: string | null;
 }
 
 export interface SourceProduct {
