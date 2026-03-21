@@ -1,4 +1,4 @@
-export function useSyncActions() {
+export function useSyncActions(refetch?: () => void | Promise<void>) {
   return {
     triggerSync: (type: string) => {},
     cancelSync: (id: string) => {},
