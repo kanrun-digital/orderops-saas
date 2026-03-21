@@ -181,7 +181,7 @@ export default function OrdersPage() {
   const [isCancelling, setIsCancelling] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [sortColumn, setSortColumn] = useState<SortColumn>('createdAt');
+  const [sortColumn, setSortColumn] = useState<SortColumn>('created_at');
   const [sortDirection, setSortDirection] = useState<SortDir>('desc');
   const [currentPage, setCurrentPage] = useState<number>(PAGINATION.DEFAULT_PAGE);
 
@@ -1072,7 +1072,7 @@ export default function OrdersPage() {
                       <SortableHead column="status">{t('orders.tableStatus')}</SortableHead>
                       <SortableHead column="total">{t('orders.tableTotal')}</SortableHead>
                       <TableHead className="w-[110px]">{t('orders.tableDiscount')}</TableHead>
-                      <SortableHead column="createdAt">{t('orders.tableTime')}</SortableHead>
+                      <SortableHead column="created_at">{t('orders.tableTime')}</SortableHead>
                       <TableHead className="w-10" />
                     </TableRow>
                   </TableHeader>
