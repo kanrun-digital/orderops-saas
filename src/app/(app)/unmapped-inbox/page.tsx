@@ -2,7 +2,6 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
-import { ENTITY_TYPES } from '@/lib/constants/entities';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -52,8 +51,8 @@ export default function UnmappedInbox() {
   const { data: modifierGroups, isLoading: modifiersLoading } = useModifierGroups();
 
   const { providers } = useMenuSyncProviders();
-  const { providerColumns, getMappingStatus } = useProductMappingMatrix(ENTITY_TYPES.PRODUCT);
-  const { providerColumns: modProviderColumns, getMappingStatus: getModMappingStatus } = useProductMappingMatrix(ENTITY_TYPES.MODIFIER_GROUP);
+  const { providerColumns, getMappingStatus } = useProductMappingMatrix("product");
+  const { providerColumns: modProviderColumns, getMappingStatus: getModMappingStatus } = useProductMappingMatrix("modifier_group");
 
   const categoryMap = useMemo(() => new Map((categories as any[])?.map((c: any) => [c.id, c.name]) ?? []), [categories]);
 
