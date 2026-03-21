@@ -211,7 +211,7 @@ export default function StopList() {
                     <CommandInput
                       placeholder={t('stopList.searchProducts')}
                       value={searchValue}
-                      onValueChange={setSearchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
                     />
                     <CommandList>
                       <CommandEmpty>{t('stopList.noProductsFound')}</CommandEmpty>
