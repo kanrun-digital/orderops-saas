@@ -28,6 +28,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Switch } from '@/components/ui/switch';
 import { useAccountSettings, useUpdateAccountSettings } from '@/hooks/useAccountSettings';
+import { ROUTES } from '@/constants/routes';
 
 const t = (key: string) => key;
 
@@ -261,7 +262,7 @@ export default function CustomerSyncStatus() {
           subtitle={t('customerSyncStatus.subtitle')}
           actions={
             <Button variant="outline" size="sm" asChild>
-              <Link href="/app/customers">
+              <Link href={ROUTES.customers}>
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 {t('customerSyncStatus.backToCustomers')}
               </Link>
