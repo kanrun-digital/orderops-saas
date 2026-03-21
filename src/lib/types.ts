@@ -28,6 +28,8 @@ export interface MenuCategory {
 export interface MenuProductExtended extends MenuProduct {
   category_name?: string;
   modifiers?: any[];
+  weight?: number | string | null;
+  sku?: string | null;
 }
 
 export interface SourceProduct {
