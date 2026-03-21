@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as ncb from "@/lib/ncb";
 
+function jsonDataResponse(
+  data: unknown,
+  init?: ResponseInit,
+  meta?: Record<string, unknown>
+) {
+  return NextResponse.json(meta ? { data, meta } : { data }, init);
+}
+
 function getFilters(searchParams: URLSearchParams): Record<string, string> {
   const filters: Record<string, string> = {};
   searchParams.forEach((v: string, k: string) => {
@@ -40,7 +48,7 @@ export async function GET(
       ? await ncb.readAsUser(table, cookie, options)
       : await ncb.read(table, options);
 
-    return NextResponse.json(data);
+    return jsonDataResponse(data);
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
@@ -60,7 +68,7 @@ export async function POST(
       ? await ncb.createAsUser(table, cookie, body)
       : await ncb.create(table, body);
 
-    return NextResponse.json(data, { status: 201 });
+    return jsonDataResponse(data, { status: 201 });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
@@ -81,7 +89,7 @@ export async function PUT(
     }
 
     const data = await ncb.update(table, pkId, body);
-    return NextResponse.json(data);
+    return jsonDataResponse(data);
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
@@ -101,7 +109,7 @@ export async function PATCH(
 
     if (pkId) {
       const data = await ncb.update(table, pkId, body);
-      return NextResponse.json({ data, meta: { updatedCount: 1, mode: "pk_id" } });
+      return jsonDataResponse(data, undefined, { updatedCount: 1, mode: "pk_id" });
     }
 
     if (Object.keys(filters).length === 0) {
@@ -117,13 +125,10 @@ export async function PATCH(
     const allowBulk = isAllowedStopListBulkUpdate(table, filters);
     const result = await ncb.patchByFilters(table, filters, body, { allowBulk });
 
-    return NextResponse.json({
-      data: result.rows,
-      meta: {
-        updatedCount: result.updatedCount,
-        mode: allowBulk ? "filters_bulk" : "filters",
-        filters,
-      },
+    return jsonDataResponse(result.rows, undefined, {
+      updatedCount: result.updatedCount,
+      mode: allowBulk ? "filters_bulk" : "filters",
+      filters,
     });
   } catch (err: any) {
     const message = err?.message || "Unknown error";
@@ -151,7 +156,7 @@ export async function DELETE(
     }
 
     await ncb.del(table, pkId);
-    return NextResponse.json({ ok: true });
+    return jsonDataResponse({ ok: true });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
