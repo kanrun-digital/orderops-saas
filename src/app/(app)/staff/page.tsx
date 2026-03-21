@@ -483,9 +483,7 @@ export default function StaffPage() {
                                     <AlertDialog>
                                       <AlertDialogTrigger asChild>
                                         <DropdownMenuItem
-                                          onSelect={(e: any) =>
-                                            e.preventDefault()
-                                          }
+                                          onSelect={() => undefined}
                                         >
                                           {t(
                                             "teamSettings.actions.transferOwnership"
@@ -578,9 +576,7 @@ export default function StaffPage() {
                                 <AlertDialog>
                                   <AlertDialogTrigger asChild>
                                     <DropdownMenuItem
-                                      onSelect={(e: any) =>
-                                        e.preventDefault()
-                                      }
+                                      onSelect={() => undefined}
                                       className="text-destructive"
                                     >
                                       <Trash2 className="h-4 w-4 mr-2" />
