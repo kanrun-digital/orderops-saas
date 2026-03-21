@@ -750,13 +750,15 @@ export default function OrdersPage() {
     const canEditAssignments = Boolean(assignmentPermissions?.canEditAssignments);
     const isCurrentOperator = user?.id && order.processingOperatorId === user.id;
     actions.push({
+      key: 'view-details',
       label: t('orders.viewDetails'),
       icon: <ExternalLink className="h-4 w-4" />,
       onClick: () => router.push(`/app/orders/${order.id}`),
-      primary: true,
+      variant: 'default',
     });
     if (!order.syrveOrderId && order.source !== 'internal') {
       actions.push({
+        key: 'send-to-pos',
         label: t('orders.sendToPOS'),
         icon: <Send className="h-4 w-4" />,
         onClick: () => handleSendToSyrve(order),
@@ -765,6 +767,7 @@ export default function OrdersPage() {
     }
     if ((canEditAssignments || isCurrentOperator) && !order.processingOperatorId) {
       actions.push({
+        key: 'take-order',
         label: 'Взяти в роботу',
         icon: <Package className="h-4 w-4" />,
         onClick: () => assignOrder.mutate({ orderId: order.id, nextOperatorId: user?.id ?? null, action: 'take' }),
@@ -773,12 +776,14 @@ export default function OrdersPage() {
     }
     if (order.processingOperatorId) {
       actions.push({
+        key: 'release-order',
         label: 'Зняти з роботи',
         icon: <Ban className="h-4 w-4" />,
         onClick: () => assignOrder.mutate({ orderId: order.id, nextOperatorId: null, action: 'release' }),
         disabled: !isCurrentOperator && !canEditAssignments,
       });
       actions.push({
+        key: 'transfer-order',
         label: 'Передати',
         icon: <RefreshCw className="h-4 w-4" />,
         onClick: () => {
@@ -796,18 +801,20 @@ export default function OrdersPage() {
     }
     if (canCancelOrder(order)) {
       actions.push({
+        key: 'cancel-order',
         label: t('orders.cancelOrder'),
         icon: <Ban className="h-4 w-4" />,
         onClick: () => setCancelDialogOrder(order),
-        destructive: true,
+        variant: 'destructive',
       });
     }
     if (isAdmin) {
       actions.push({
+        key: 'delete-order-admin',
         label: t('orders.deleteOrderAdmin'),
         icon: <Trash2 className="h-4 w-4" />,
         onClick: () => setDeleteDialogOrder(order),
-        destructive: true,
+        variant: 'destructive',
       });
     }
     return actions;
