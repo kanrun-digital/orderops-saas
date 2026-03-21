@@ -52,7 +52,8 @@ export function useSyrveCourierLocationsMultiOrg(orgIds?: string[]) {
 export function useSyrveAddresses(params?: any) {
   return { data: [] as any, isLoading: false, error: null as Error | null, refetch: () => {} };
 }
-export function useSyrveAddressCount() {
+export function useSyrveAddressCount(level?: 'region' | 'city' | 'street') {
+  void level;
   return { data: 0 as any, isLoading: false, isFetching: false, dataUpdatedAt: 0 };
 }
 export function useSyrveAddressLookup(query?: string) {
