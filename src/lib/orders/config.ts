@@ -74,8 +74,10 @@ export function getSourceLabel(source: string): string {
   };
   return labels[source] || source;
 }
-export function getSourceBadgeVariant(source: string): string {
-  const variants: Record<string, string> = {
+type SourceBadgeVariant = "default" | "secondary" | "destructive" | "outline";
+
+export function getSourceBadgeVariant(source: string): SourceBadgeVariant {
+  const variants: Record<string, SourceBadgeVariant> = {
     syrve: "default", salesbox: "secondary", bolt: "outline",
     glovo: "outline", wolt: "outline", manual: "secondary",
   };
