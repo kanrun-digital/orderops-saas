@@ -20,9 +20,14 @@ export function useProviderConnections(provider?: string) {
 export interface ConnectionListItem {
   id: string;
   provider_code: string;
+  providerCode: string;
   name: string;
+  connectionName: string;
+  connectionId: string;
   status: string;
   created_at?: string;
+  lastSyncAt?: string;
+  lastAuthError?: string;
 }
 
 export default useConnectionList;
