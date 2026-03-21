@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { PageHeader } from "@/components/app/PageHeader";
 import {
@@ -50,13 +48,11 @@ function StatCard({ title, value, description, icon }: StatCardProps) {
 }
 
 export default function AnalyticsPage() {
-  const pathname = usePathname();
-  const session = useAuthStore((s: any) => s.session);
-  const accountId = session?.account?.id;
+  const accountId = useAuthStore((s) => s.accountId);
 
   const { data: summary, isLoading } = useQuery({
     queryKey: ["analytics_summary", accountId],
-    queryFn: () => fetchAnalyticsSummary(accountId),
+    queryFn: () => fetchAnalyticsSummary(accountId as string),
     enabled: !!accountId,
   });
 

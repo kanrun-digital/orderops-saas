@@ -89,10 +89,8 @@ const t = (key: string) => key;
 type AccountRole = "owner" | "admin" | "manager" | "staff";
 
 export default function StaffPage() {
-  const session = useAuthStore((s: any) => s.session);
-  const user = session?.user;
-  const currentAccount = session?.account;
-  const currentRole = session?.role ?? "staff";
+  const profile = useAuthStore((s) => s.profile);
+  const currentRole = useAuthStore((s) => s.userRole) ?? "staff";
 
   const { data: members, isLoading: membersLoading } = useTeamMembers();
   const { data: invites, isLoading: invitesLoading } = usePendingInvites();
@@ -415,7 +413,7 @@ export default function StaffPage() {
               </TableHeader>
               <TableBody>
                 {(members as any[])?.map((member: any) => {
-                  const isSelf = member.user_id === user?.id;
+                  const isSelf = member.user_id === profile?.id;
                   const isOwner = member.role === "owner";
 
                   return (

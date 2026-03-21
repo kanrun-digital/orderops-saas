@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { PageHeader } from "@/components/app/PageHeader";
 import {
@@ -62,8 +61,7 @@ const STATUS_BADGE: Record<string, "default" | "secondary" | "destructive" | "ou
 };
 
 export default function SitesPage() {
-  const session = useAuthStore((s: any) => s.session);
-  const accountId = session?.account?.id;
+  const accountId = useAuthStore((s) => s.accountId);
 
   const {
     data: sites = [],
@@ -71,7 +69,7 @@ export default function SitesPage() {
     refetch,
   } = useQuery({
     queryKey: ["public_sites", accountId],
-    queryFn: () => fetchSites(accountId),
+    queryFn: () => fetchSites(accountId as string),
     enabled: !!accountId,
   });
 

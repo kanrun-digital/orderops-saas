@@ -42,7 +42,7 @@ export interface Profile extends NcbEntity {
   email: string;
   full_name: string;
   avatar_url?: string | null;
-  display_name?: string;
+  display_name?: string | null;
 }
 
 // ── Customer ───────────────────────────────────
@@ -149,11 +149,14 @@ export interface Driver extends NcbEntity {
 
 // ── Session (from NCB auth) ────────────────────
 
+export type AccountRole = AccountUser["role"];
+
 export interface NcbSession {
   pk_id: number;
   id: string;
   email: string;
-  [key: string]: any;
+  account_id?: string | null;
+  role?: AccountRole | null;
 }
 
 // ── API response wrappers ──────────────────────

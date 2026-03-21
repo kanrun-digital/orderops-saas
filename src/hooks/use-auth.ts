@@ -73,6 +73,9 @@ export function useAuth() {
     account: store.account,
     profile: store.profile,
     isAdmin: store.isAdmin,
+    accountId: store.accountId,
+    userRole: store.userRole,
+    displayName: store.displayName,
     isLoading: store.isLoading || sessionQuery.isLoading,
     isAuthenticated: !!store.session,
 
