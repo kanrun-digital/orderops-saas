@@ -24,6 +24,7 @@ import {
   Ban, Plus, Trash2, RefreshCw, Loader2, ImageOff,
 } from 'lucide-react';
 import { PageHeader } from '@/components/app/PageHeader';
+import { updateByFilters } from '@/lib/data-client';
 
 const t = (key: string) => key;
 
@@ -47,16 +48,11 @@ export default function StopList() {
 
   const addToStopListMutation = useMutation({
     mutationFn: async (productId: string) => {
-      const res = await fetch(`/api/data/menu_products?id=eq.${productId}`, {
-        method: 'PATCH',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ is_in_stop_list: true }),
+      await updateByFilters({
+        table: 'menu_products',
+        filters: { id: productId },
+        data: { is_in_stop_list: true },
       });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.message || 'Failed to add to stop list');
-      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stop-list-products'] });
@@ -70,16 +66,11 @@ export default function StopList() {
 
   const removeFromStopListMutation = useMutation({
     mutationFn: async (productId: string) => {
-      const res = await fetch(`/api/data/menu_products?id=eq.${productId}`, {
-        method: 'PATCH',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ is_in_stop_list: false, stop_list_balance: null }),
+      await updateByFilters({
+        table: 'menu_products',
+        filters: { id: productId },
+        data: { is_in_stop_list: false, stop_list_balance: null },
       });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.message || 'Failed to remove from stop list');
-      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stop-list-products'] });
@@ -93,16 +84,11 @@ export default function StopList() {
 
   const clearStopListMutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch(`/api/data/menu_products?is_in_stop_list=eq.true`, {
-        method: 'PATCH',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ is_in_stop_list: false, stop_list_balance: null }),
+      await updateByFilters({
+        table: 'menu_products',
+        filters: { is_in_stop_list: true },
+        data: { is_in_stop_list: false, stop_list_balance: null },
       });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.message || 'Failed to clear stop list');
-      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stop-list-products'] });
