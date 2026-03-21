@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { ROUTES } from "@/constants/routes";
@@ -113,9 +114,9 @@ export default function LoginPage() {
 
       <p className="text-center text-sm text-muted-foreground">
         Don&apos;t have an account?{" "}
-        <a href={ROUTES.signup} className="font-medium text-primary hover:underline">
+        <Link href={ROUTES.signup} className="font-medium text-primary hover:underline">
           Sign up
-        </a>
+        </Link>
       </p>
     </div>
   );
