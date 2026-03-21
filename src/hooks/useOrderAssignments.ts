@@ -19,6 +19,13 @@ export function useOrderAssignmentHistory(orderId?: string) {
   return { data: [] as any, isLoading: false };
 }
 export function useOrderAssignmentPermissions() {
-  return { canAssign: false, canReassign: false, canUnassign: false };
+  return {
+    data: {
+      canAssign: false,
+      canReassign: false,
+      canUnassign: false,
+      canEditAssignments: false,
+    },
+  };
 }
 export default useOrderAssignments;
