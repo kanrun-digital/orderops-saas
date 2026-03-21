@@ -7,6 +7,7 @@ WORKTREE_ROOT="${WORKTREE_ROOT:-/tmp/orderops-deploy}"
 APP_DIR="${APP_DIR:-$WORKTREE_ROOT/app}"
 IMAGE_TAG="${IMAGE_TAG:-orderops-saas:latest}"
 DOCKERFILE_PATH="${DOCKERFILE_PATH:-Dockerfile}"
+PRE_DEPLOY_SCRIPT="${PRE_DEPLOY_SCRIPT:-pre-deploy-check.sh}"
 REACT_QUERY_INTRO_COMMIT="${REACT_QUERY_INTRO_COMMIT:-c05a24707e589ad7788ef56d1c86d138e934d007}"
 DEFAULT_BRANCH="${DEFAULT_BRANCH:-$(git remote show origin 2>/dev/null | sed -n '/HEAD branch/s/.*: //p' || true)}"
 
@@ -57,24 +58,13 @@ if [[ -n "$DEPLOY_REF" && "$DEPLOY_REF" != "$DEFAULT_BRANCH" ]]; then
   echo "[deploy] Non-default deploy requested: '$DEPLOY_REF' (default branch is '$DEFAULT_BRANCH')."
 fi
 
-echo "[deploy] package.json dependencies block in server clone:"
-node - "$APP_DIR/package.json" <<'EOF_NODE'
-const fs = require('fs');
-const pkgPath = process.argv[2];
-const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-console.log(JSON.stringify(pkg.dependencies ?? {}, null, 2));
-EOF_NODE
-
-if ! node - "$APP_DIR/package.json" <<'EOF_NODE'
-const fs = require('fs');
-const pkgPath = process.argv[2];
-const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-process.exit(pkg.dependencies && pkg.dependencies['@tanstack/react-query'] ? 0 : 1);
-EOF_NODE
-then
-  echo "[deploy] Refusing production deploy: @tanstack/react-query is missing from package.json in the server clone."
+echo "[deploy] Running pre-deploy checks before docker build."
+if [[ ! -x "$APP_DIR/$PRE_DEPLOY_SCRIPT" ]]; then
+  echo "[deploy] Pre-deploy script is missing or not executable: $APP_DIR/$PRE_DEPLOY_SCRIPT"
   exit 1
 fi
 
-echo "[deploy] Confirmed @tanstack/react-query is present in package.json. Proceeding to docker build."
+"$APP_DIR/$PRE_DEPLOY_SCRIPT" "$APP_DIR"
+
+echo "[deploy] Pre-deploy checks passed. Proceeding to docker build."
 docker build -f "$DOCKERFILE_PATH" -t "$IMAGE_TAG" "$APP_DIR"
