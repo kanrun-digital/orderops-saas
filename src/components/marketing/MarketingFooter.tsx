@@ -52,7 +52,7 @@ export function MarketingFooter() {
 
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-6 py-5 text-sm text-slate-500 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-          <p>© 2026 {copy.common.brand}. {copy.common.rights}</p>
+          <p>&copy; 2026 {copy.common.brand}. {copy.common.rights}</p>
           <p>{copy.common.footerNote}</p>
         </div>
       </div>
