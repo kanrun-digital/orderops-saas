@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useCustomers, type CustomerSortColumn, type SortDirection, type SourceFilter } from '@/hooks/useCustomers';
+import { isSourceFilter, useCustomers, type CustomerSortColumn, type SortDirection, type SourceFilter } from '@/hooks/useCustomers';
 import { useCustomerStats } from '@/hooks/useCustomerStats';
 import { useProviderConnections } from '@/hooks/useCustomerDataOps';
 import { useSalesboxClearCustomers } from '@/hooks/salesbox';
@@ -136,7 +136,8 @@ export default function CustomersPage() {
   }, [sortColumn]);
 
   const handleSourceFilterChange = useCallback((value: string) => {
-    setSourceFilter(value as SourceFilter);
+    if (!isSourceFilter(value)) return;
+    setSourceFilter(value);
     setPage(1);
   }, []);
 
