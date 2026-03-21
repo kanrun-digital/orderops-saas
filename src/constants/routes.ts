@@ -9,20 +9,41 @@ export const ROUTES = {
   terms: "/terms",
   login: "/login",
   signup: "/signup",
+
   dashboard: "/dashboard",
   orders: "/orders",
   orderDetail: (id: string) => `/orders/${id}`,
+
+  operations: "/operations",
+  analytics: "/analytics",
+
   customers: "/customers",
   customerDetail: (id: string) => `/customers/${id}`,
+  customerSync: "/customer-sync",
+  customerSegments: "/customer-segments",
+  chats: "/chats",
+
   menu: "/menu",
   menuItem: (id: string) => `/menu/${id}`,
+  stopList: "/stop-list",
+  menuSources: "/menu-sources",
+  menuMapping: "/menu-mapping",
+  unmappedInbox: "/unmapped-inbox",
+
+  integrations: "/integrations",
+  syncDashboard: "/sync-dashboard",
+  syrveAddresses: "/syrve-addresses",
+
+  qrMenu: "/qr-menu",
+  reviews: "/reviews",
+  sites: "/sites",
+  deliveryZones: "/delivery-zones",
+
+  restaurants: "/restaurants",
+  staff: "/staff",
+  billing: "/billing",
   settings: "/settings",
-  settingsTeam: "/settings/team",
-  settingsBilling: "/settings/billing",
-  settingsIntegrations: "/settings/integrations",
-  reports: "/reports",
-  drivers: "/drivers",
-  driverDetail: (id: string) => `/drivers/${id}`,
+  help: "/help",
 } as const;
 
 // ── API Routes ─────────────────────────────────
