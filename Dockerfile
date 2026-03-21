@@ -13,6 +13,8 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+RUN node -e "try { console.log('Resolved @tanstack/react-query/package.json to', require.resolve('@tanstack/react-query/package.json')); } catch (error) { console.error('Failed to resolve @tanstack/react-query/package.json before next build. This indicates npm install did not produce the expected dependency.', error); process.exit(1); }"
+
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN npm run build
