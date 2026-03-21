@@ -28,6 +28,7 @@ import { QrPreviewDialog } from './QrPreviewDialog';
 import { SitesTable } from './SitesTable';
 import { TablesSection } from './TablesSection';
 import { SiteFormDialog } from './SiteFormDialog';
+import { ROUTES } from '@/constants/routes';
 
 
 const t = (key: string) => key;
@@ -233,7 +234,7 @@ export default function QRMenuSettingsPage() {
               {availableLocations.length === 0 && locations.length === 0 && (
                 <p className="text-sm text-muted-foreground mt-2">
                   {t('qrMenu.addLocationFirst')}{' '}
-                  <a href="/app/restaurants" className="underline text-primary hover:text-primary/80">
+                  <a href={ROUTES.restaurants} className="underline text-primary hover:text-primary/80">
                     {t('qrMenu.restaurantsLink')}
                   </a>.
                 </p>

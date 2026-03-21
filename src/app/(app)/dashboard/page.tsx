@@ -29,6 +29,7 @@ import { useMemo } from 'react';
 import { statusMeta, type OrderStatus } from '@/lib/orders/config';
 import { cn } from '@/lib/utils';
 import { formatDateFns } from '@/lib/utils/formatDateTime';
+import { ROUTES } from '@/constants/routes';
 
 const t = (key: string, params?: Record<string, any>) => key;
 
@@ -154,7 +155,7 @@ export default function DashboardPage() {
                 emptyIcon={<Package className="h-12 w-12" />}
                 emptyTitle={t('dashboard.noOrdersYet')}
                 emptyCta={
-                  <Link href="/app/menu">
+                  <Link href={ROUTES.menu}>
                     <Button variant="link">{t('dashboard.viewMenu')} →</Button>
                   </Link>
                 }
@@ -165,7 +166,7 @@ export default function DashboardPage() {
                     return (
                       <Link
                         key={order.id}
-                        href={`/app/orders/${order.id}`}
+                        href={ROUTES.orderDetail(order.id)}
                         className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
                       >
                         <div>
@@ -184,7 +185,7 @@ export default function DashboardPage() {
                       </Link>
                     );
                   })}
-                  <Link href="/app/orders">
+                  <Link href={ROUTES.orders}>
                     <Button variant="ghost" className="w-full mt-1" size="sm">
                       {t('dashboard.viewAllOrders')}
                       <ArrowRight className="ml-2 h-3.5 w-3.5" />

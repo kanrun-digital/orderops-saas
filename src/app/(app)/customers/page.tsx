@@ -45,6 +45,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { cn } from '@/lib/utils';
 import { PAGINATION, TIMING } from '@/lib/constants';
 import { PROVIDER_CODES } from '@/lib/constants/integrations';
+import { ROUTES } from '@/constants/routes';
 
 const t = (key: string, params?: Record<string, any>) => key;
 
@@ -272,13 +273,13 @@ export default function CustomersPage() {
           actions={
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" size="sm" asChild>
-                <Link href="/app/customers/segments">
+                <Link href={ROUTES.customerSegments}>
                   <BarChart2 className="mr-2 h-4 w-4" />
                   Сегменти
                 </Link>
               </Button>
               <Button variant="outline" size="sm" asChild>
-                <Link href="/app/customers/sync">
+                <Link href={ROUTES.customerSync}>
                   <BarChart2 className="mr-2 h-4 w-4" />
                   {t('customers.syncStatusButton')}
                 </Link>
@@ -466,7 +467,7 @@ export default function CustomersPage() {
                       <TableCell>{formatDate(customer.last_order_at)}</TableCell>
                       <TableCell className="text-right">
                         <Button asChild size="sm" variant="ghost" className="gap-1">
-                          <Link href={`/app/customers/${customer.id}`}>
+                          <Link href={ROUTES.customerDetail(customer.id)}>
                             {t('customers.view')}
                             <ArrowRight className="h-4 w-4" />
                           </Link>

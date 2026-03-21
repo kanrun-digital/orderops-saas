@@ -18,6 +18,7 @@ import { useAccount } from '@/contexts/AccountContext';
 import { useMenuSyncProviders } from '@/hooks/useMenuSyncProviders';
 import { ArrowRight, Package, FolderTree, AlertCircle, ShoppingBag, MapPin, LayoutGrid } from 'lucide-react';
 import type { MappingProvider } from '@/lib/types/mappingProvider';
+import { ROUTES } from '@/constants/routes';
 
 const t = (key: string, params?: Record<string, string | number>) => key;
 
@@ -104,7 +105,7 @@ export default function MenuMappingPage() {
             </CardHeader>
             <CardContent>
               <Button asChild>
-                <Link href="/app/integrations">
+                <Link href={ROUTES.integrations}>
                   {t('menuMapping.goToIntegrations')}
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Link>
