@@ -21,5 +21,6 @@ export interface SourceProduct {
   external_id: string;
   name: string;
   provider: string;
+  canonicalProductId?: string | null;
   price?: number;
 }
