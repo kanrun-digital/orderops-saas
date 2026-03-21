@@ -16,83 +16,73 @@ function isAllowedStopListBulkUpdate(
   return table === "menu_products" && filters.is_in_stop_list === "eq.true";
 }
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: any }
-) {
-  try {
-    const segments = (await params).path as string[];
-    const table = segments[0];
-    const searchParams = req.nextUrl.searchParams;
+function buildTargetUrl(req: NextRequest, segments: string[]): string {
+  const baseUrl = new URL(`${ncb.env().dataUrl}/${segments.map(encodeURIComponent).join("/")}`);
 
-    const filters = getFilters(searchParams);
+  req.nextUrl.searchParams.forEach((value, key) => {
+    baseUrl.searchParams.append(key, value);
+  });
 
-    const cookie = ncb.getCookie(req);
-    const options: ncb.ReadOptions = {
-      filters: Object.keys(filters).length > 0 ? filters : undefined,
-      sort: searchParams.get("_sort") || undefined,
-      order: (searchParams.get("_order") as "asc" | "desc") || undefined,
-      limit: searchParams.has("_limit") ? Number(searchParams.get("_limit")) : undefined,
-      page: searchParams.has("_page") ? Number(searchParams.get("_page")) : undefined,
-    };
-
-    const data = cookie
-      ? await ncb.readAsUser(table, cookie, options)
-      : await ncb.read(table, options);
-
-    return NextResponse.json(data);
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  if (!baseUrl.searchParams.has("Instance")) {
+    baseUrl.searchParams.set("Instance", ncb.env().instance);
   }
+
+  return baseUrl.toString();
 }
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: any }
-) {
-  try {
-    const segments = (await params).path as string[];
-    const table = segments[0];
-    const body = (await req.json()) as any;
-    const cookie = ncb.getCookie(req);
+async function parseProxyResponse(res: Response) {
+  const contentType = res.headers.get("content-type") || "";
 
-    const data = cookie
-      ? await ncb.createAsUser(table, cookie, body)
-      : await ncb.create(table, body);
-
-    return NextResponse.json(data, { status: 201 });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  if (contentType.includes("application/json")) {
+    return res.json();
   }
+
+  const text = await res.text();
+  return text.length > 0 ? text : null;
 }
 
-export async function PUT(
+async function proxyDataRequest(
   req: NextRequest,
-  { params }: { params: any }
+  { params }: { params: Promise<{ path: string[] }> }
 ) {
   try {
-    const segments = (await params).path as string[];
-    const table = segments[0];
-    const body = (await req.json()) as any;
+    const { path: segments } = await params;
+    const targetUrl = buildTargetUrl(req, segments);
+    const cookie = ncb.getCookie(req);
+    const body = req.method === "GET" || req.method === "DELETE" ? undefined : await req.text();
 
-    const pkId = Number(segments[1]);
-    if (!pkId) {
-      return NextResponse.json({ error: "pk_id required in path" }, { status: 400 });
+    const upstreamRes = await fetch(targetUrl, {
+      method: req.method,
+      headers: cookie ? ncb.userDataHeaders(cookie) : ncb.dataHeaders(),
+      body,
+      cache: "no-store",
+    });
+
+    const payload = await parseProxyResponse(upstreamRes);
+
+    if (!upstreamRes.ok) {
+      const errorMessage =
+        typeof payload === "string"
+          ? payload
+          : payload && typeof payload === "object" && "error" in payload
+            ? String(payload.error)
+            : `Data proxy request failed with status ${upstreamRes.status}`;
+
+      return NextResponse.json({ error: errorMessage }, { status: upstreamRes.status });
     }
 
-    const data = await ncb.update(table, pkId, body);
-    return NextResponse.json(data);
+    return NextResponse.json({ data: payload }, { status: upstreamRes.status });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json({ error: err?.message || "Unknown error" }, { status: 500 });
   }
 }
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: any }
+  { params }: { params: Promise<{ path: string[] }> }
 ) {
   try {
-    const segments = (await params).path as string[];
+    const { path: segments } = await params;
     const table = segments[0];
     const body = (await req.json()) as any;
     const searchParams = req.nextUrl.searchParams;
@@ -137,22 +127,7 @@ export async function PATCH(
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: any }
-) {
-  try {
-    const segments = (await params).path as string[];
-    const table = segments[0];
-
-    const pkId = Number(segments[1]);
-    if (!pkId) {
-      return NextResponse.json({ error: "pk_id required in path" }, { status: 400 });
-    }
-
-    await ncb.del(table, pkId);
-    return NextResponse.json({ ok: true });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
-  }
-}
+export const GET = proxyDataRequest;
+export const POST = proxyDataRequest;
+export const PUT = proxyDataRequest;
+export const DELETE = proxyDataRequest;
