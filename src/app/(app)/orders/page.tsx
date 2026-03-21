@@ -1057,7 +1057,7 @@ export default function OrdersPage() {
                           aria-label={t('common.accessibility.selectAll')}
                         />
                       </TableHead>
-                      <SortableHead column="externalId">{t('orders.tableOrder')}</SortableHead>
+                      <TableHead>{t('orders.tableOrder')}</TableHead>
                       <TableHead>{t('orders.tableSource')}</TableHead>
                       <TableHead>{t('orders.tableLocation')}</TableHead>
                       <TableHead>{t('orders.tableDeliveryType')}</TableHead>
