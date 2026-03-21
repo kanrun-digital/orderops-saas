@@ -1052,13 +1052,7 @@ export default function OrdersPage() {
                     <TableRow>
                       <TableHead className="w-10">
                         <Checkbox
-                          checked={
-                            orders.length > 0 && orders.every((o: any) => selectedIds.has(o.id))
-                              ? true
-                              : orders.some((o: any) => selectedIds.has(o.id))
-                                ? 'indeterminate'
-                                : false
-                          }
+                          checked={orders.length > 0 && orders.every((o: any) => selectedIds.has(o.id))}
                           onCheckedChange={toggleSelectAll}
                           aria-label={t('common.accessibility.selectAll')}
                         />
