@@ -15,6 +15,8 @@ import { Loader2, RefreshCw, Search, MapPin, Building2, Navigation } from 'lucid
 import { toast } from 'sonner';
 import { toastError } from '@/lib/utils/errors';
 import {
+  type SyrveAddressRecord,
+  type SyrveOrganization,
   useSyrveAddresses,
   useSyrveAddressCount,
   useSyrveSyncRegions,
@@ -30,7 +32,7 @@ const t = (key: string) => key;
 const SYRVE_DIAGNOSTICS_ENABLED = process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_ENABLE_SYRVE_DIAGNOSTICS === 'true';
 
 function AddressTable({ data, isLoading, emptyText }: {
-  data: Array<{ id: string; syrve_id: string; name: string; parent_id: string | null; entity_type: string; is_deleted: boolean }>;
+  data: SyrveAddressRecord[];
   isLoading: boolean;
   emptyText: string;
 }) {
@@ -40,7 +42,7 @@ function AddressTable({ data, isLoading, emptyText }: {
     <Table>
       <TableHeader><TableRow><TableHead>{t('syrveAddresses.name')}</TableHead><TableHead>{t('syrveAddresses.syrveId')}</TableHead></TableRow></TableHeader>
       <TableBody>
-        {data.map((item: any) => (
+        {data.map((item) => (
           <TableRow key={item.id}>
             <TableCell className="font-medium">{item.name}</TableCell>
             <TableCell className="font-mono text-xs text-muted-foreground">{item.syrve_id}</TableCell>
@@ -54,7 +56,7 @@ function AddressTable({ data, isLoading, emptyText }: {
 export default function SyrveAddresses() {
   const queryClient = useQueryClient();
   const { currentAccount } = useAccount();
-  const accountId = (currentAccount as any)?.id;
+  const accountId = currentAccount?.id ?? null;
   const [searchQuery, setSearchQuery] = useState('');
   const [activeOrganizationId, setActiveOrganizationId] = useState('');
 
@@ -74,7 +76,7 @@ export default function SyrveAddresses() {
   const lookupMutation = useSyrveAddressLookup();
 
   const selectedOrganizations = useMemo(
-    () => (organizations as any[]).filter((organization: any) => organization.is_selected),
+    () => organizations.filter((organization) => organization.is_selected),
     [organizations],
   );
 
@@ -87,7 +89,7 @@ export default function SyrveAddresses() {
       return;
     }
 
-    if (!selectedOrganizations.some((organization: any) => organization.organization_id === activeOrganizationId)) {
+    if (!selectedOrganizations.some((organization) => organization.organization_id === activeOrganizationId)) {
       setActiveOrganizationId(selectedOrganizations[0].organization_id);
     }
   }, [selectedOrganizations, activeOrganizationId]);
@@ -96,9 +98,9 @@ export default function SyrveAddresses() {
     if (!activeOrganizationId) return;
     try {
       const result = await syncRegions.mutateAsync(activeOrganizationId);
-      toast.success(t('syrveAddresses.syncedCount') + ': ' + ((result as any).count ?? 0));
+      toast.success(t('syrveAddresses.syncedCount') + ': ' + (result.count ?? 0));
     }
-    catch (e: any) {
+    catch (e: unknown) {
       toastError(t('syrveAddresses.regionSyncFailed'), e);
     }
   };
@@ -107,9 +109,9 @@ export default function SyrveAddresses() {
     if (!activeOrganizationId) return;
     try {
       const result = await syncCities.mutateAsync(activeOrganizationId);
-      toast.success(t('syrveAddresses.syncedCount') + ': ' + ((result as any).count ?? 0));
+      toast.success(t('syrveAddresses.syncedCount') + ': ' + (result.count ?? 0));
     }
-    catch (e: any) {
+    catch (e: unknown) {
       toastError(t('syrveAddresses.citySyncFailed'), e);
     }
   };
@@ -118,16 +120,22 @@ export default function SyrveAddresses() {
     if (!searchQuery.trim() || !activeOrganizationId) return;
     try {
       const result = await lookupMutation.mutateAsync({ cityName: searchQuery, organizationId: activeOrganizationId });
-      toast.info(t('syrveAddresses.foundCities') + ': ' + ((result as any).cities?.length ?? 0));
+      toast.info(t('syrveAddresses.foundCities') + ': ' + result.cities.length);
     }
-    catch (e: any) {
+    catch (e: unknown) {
       toastError(t('syrveAddresses.lookupFailed'), e);
     }
   };
 
-  const filteredRegions = searchQuery.trim() ? (regions as any[]).filter((r: any) => r.name.toLowerCase().includes(searchQuery.toLowerCase())) : (regions as any[]);
-  const filteredCities = searchQuery.trim() ? (cities as any[]).filter((c: any) => c.name.toLowerCase().includes(searchQuery.toLowerCase())) : (cities as any[]);
-  const streetListCount = (streets as any[]).length;
+  const normalizedSearchQuery = searchQuery.trim().toLowerCase();
+  const filterBySearch = (items: SyrveAddressRecord[]) =>
+    normalizedSearchQuery
+      ? items.filter((item) => item.name.toLowerCase().includes(normalizedSearchQuery))
+      : items;
+
+  const filteredRegions = filterBySearch(regions);
+  const filteredCities = filterBySearch(cities);
+  const streetListCount = streets.length;
   const hasStreetCountMismatch = streetListCount !== streetCount;
 
   const handleRefreshStreetCount = async () => {
@@ -147,9 +155,9 @@ export default function SyrveAddresses() {
         </div>
 
         <div className="grid grid-cols-3 gap-4">
-          <Card><CardHeader className="pb-2"><CardDescription className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" /> {t('syrveAddresses.regions')}</CardDescription></CardHeader><CardContent><div className="text-2xl font-bold">{regionCount as any}</div></CardContent></Card>
-          <Card><CardHeader className="pb-2"><CardDescription className="flex items-center gap-1"><Building2 className="h-3.5 w-3.5" /> {t('syrveAddresses.cities')}</CardDescription></CardHeader><CardContent><div className="text-2xl font-bold">{cityCount as any}</div></CardContent></Card>
-          <Card><CardHeader className="pb-2"><CardDescription className="flex items-center gap-1"><Navigation className="h-3.5 w-3.5" /> {t('syrveAddresses.streets')}</CardDescription></CardHeader><CardContent><div className="text-2xl font-bold">{streetCount as any}</div></CardContent></Card>
+          <Card><CardHeader className="pb-2"><CardDescription className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" /> {t('syrveAddresses.regions')}</CardDescription></CardHeader><CardContent><div className="text-2xl font-bold">{regionCount}</div></CardContent></Card>
+          <Card><CardHeader className="pb-2"><CardDescription className="flex items-center gap-1"><Building2 className="h-3.5 w-3.5" /> {t('syrveAddresses.cities')}</CardDescription></CardHeader><CardContent><div className="text-2xl font-bold">{cityCount}</div></CardContent></Card>
+          <Card><CardHeader className="pb-2"><CardDescription className="flex items-center gap-1"><Navigation className="h-3.5 w-3.5" /> {t('syrveAddresses.streets')}</CardDescription></CardHeader><CardContent><div className="text-2xl font-bold">{streetCount}</div></CardContent></Card>
         </div>
 
         <Card>
@@ -176,7 +184,7 @@ export default function SyrveAddresses() {
                 <SelectValue placeholder={t('syrveAddresses.selectOrganizationPlaceholder')} />
               </SelectTrigger>
               <SelectContent>
-                {selectedOrganizations.map((organization: any) => (
+                {selectedOrganizations.map((organization: SyrveOrganization) => (
                   <SelectItem key={organization.id} value={organization.organization_id}>
                     {organization.name}
                   </SelectItem>
@@ -187,7 +195,7 @@ export default function SyrveAddresses() {
         </Card>
 
         <div className="flex gap-2">
-          <Input placeholder={t('syrveAddresses.searchPlaceholder')} value={searchQuery} onChange={(e: any) => setSearchQuery(e.target.value)} className="max-w-sm" />
+          <Input placeholder={t('syrveAddresses.searchPlaceholder')} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="max-w-sm" />
           <Button variant="outline" size="icon" onClick={handleSearch} disabled={!activeOrganizationId || lookupMutation.isPending}>
             {lookupMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
           </Button>
@@ -195,9 +203,9 @@ export default function SyrveAddresses() {
 
         <Tabs defaultValue="streets">
           <TabsList>
-            <TabsTrigger value="regions">{t('syrveAddresses.regions')} <Badge variant="secondary" className="ml-1.5 text-xs">{regionCount as any}</Badge></TabsTrigger>
-            <TabsTrigger value="cities">{t('syrveAddresses.cities')} <Badge variant="secondary" className="ml-1.5 text-xs">{cityCount as any}</Badge></TabsTrigger>
-            <TabsTrigger value="streets">{t('syrveAddresses.streets')} <Badge variant="secondary" className="ml-1.5 text-xs">{streetCount as any}</Badge></TabsTrigger>
+            <TabsTrigger value="regions">{t('syrveAddresses.regions')} <Badge variant="secondary" className="ml-1.5 text-xs">{regionCount}</Badge></TabsTrigger>
+            <TabsTrigger value="cities">{t('syrveAddresses.cities')} <Badge variant="secondary" className="ml-1.5 text-xs">{cityCount}</Badge></TabsTrigger>
+            <TabsTrigger value="streets">{t('syrveAddresses.streets')} <Badge variant="secondary" className="ml-1.5 text-xs">{streetCount}</Badge></TabsTrigger>
           </TabsList>
           <TabsContent value="regions">
             <Card>
@@ -243,13 +251,13 @@ export default function SyrveAddresses() {
                 <CardDescription>{t('syrveAddresses.expandCity')}</CardDescription>
                 {SYRVE_DIAGNOSTICS_ENABLED && hasStreetCountMismatch && (
                   <Badge variant="destructive" className="mt-2 w-fit">
-                    {t('syrveAddresses.streetDiagnosticsMismatch')}: list={streetListCount}, count={streetCount as any}
+                    {t('syrveAddresses.streetDiagnosticsMismatch')}: list={streetListCount}, count={streetCount}
                   </Badge>
                 )}
               </CardHeader>
               <CardContent>
                 <CityStreetsAccordion
-                  cities={cities as any}
+                  cities={cities}
                   citiesLoading={citiesLoading}
                   organizationId={activeOrganizationId || undefined}
                   syncDisabled={!activeOrganizationId}

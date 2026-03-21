@@ -1,6 +1,24 @@
+export type SyrveAddressLevel = 'region' | 'city' | 'street';
+
+export interface SyrveAddressRecord {
+  id: string;
+  syrve_id: string;
+  name: string;
+  parent_id: string | null;
+  entity_type: SyrveAddressLevel;
+  is_deleted: boolean;
+}
+
+export interface SyrveOrganization {
+  id: string;
+  organization_id: string;
+  name: string;
+  is_selected: boolean;
+}
+
 export function useSyrve() {
   return {
-    data: [] as any,
+    data: [] as unknown[],
     isLoading: false,
     error: null as Error | null,
     isConnected: false,
@@ -12,7 +30,7 @@ export function useSyrve() {
 export default useSyrve;
 
 export function useSelectedSyrveOrganization() {
-  return { data: null as any, isLoading: false, select: (id: string) => {} };
+  return { data: null as SyrveOrganization | null, isLoading: false, select: (_id: string) => {} };
 }
 
 export function useSyrveTerminalGroups(orgId?: string | string[]) {
@@ -25,18 +43,24 @@ type SyrveRefreshOrderResult = {
 
 export function useSyrveRefreshOrder() {
   return {
-    mutate: (data: any) => {},
-    mutateAsync: async (data: any): Promise<SyrveRefreshOrderResult> => ({ order: {} }),
+    mutate: (_data: unknown) => {},
+    mutateAsync: async (_data: unknown): Promise<SyrveRefreshOrderResult> => ({ order: {} }),
     isLoading: false,
     isPending: false,
   };
 }
 
 export function useLocationSyrveConfig(locationId?: string) {
+  void locationId;
   return { data: null as any, isLoading: false, error: null as Error | null };
 }
 export function useSyrveOrganizations() {
-  return { data: [] as any, isLoading: false, error: null as Error | null, refetch: () => {} };
+  return {
+    data: [] as SyrveOrganization[],
+    isLoading: false,
+    error: null as Error | null,
+    refetch: () => {},
+  };
 }
 export function useSyrveCredentials() {
   return { data: null as any, isLoading: false, error: null as Error | null };
@@ -49,12 +73,18 @@ export function useSyrveCourierLocationsMultiOrg(orgIds?: string[]) {
   return { data: [] as any, isLoading: false, error: null as Error | null, refetch: () => {} };
 }
 
-export function useSyrveAddresses(params?: any) {
-  return { data: [] as any, isLoading: false, error: null as Error | null, refetch: () => {} };
-}
-export function useSyrveAddressCount(level?: 'region' | 'city' | 'street') {
+export function useSyrveAddresses(level?: SyrveAddressLevel) {
   void level;
-  return { data: 0 as any, isLoading: false, isFetching: false, dataUpdatedAt: 0 };
+  return {
+    data: [] as SyrveAddressRecord[],
+    isLoading: false,
+    error: null as Error | null,
+    refetch: () => {},
+  };
+}
+export function useSyrveAddressCount(level?: SyrveAddressLevel) {
+  void level;
+  return { data: 0, isLoading: false, isFetching: false, dataUpdatedAt: 0 };
 }
 type SyrveAddressLookupVariables = {
   cityName?: string;
@@ -62,7 +92,7 @@ type SyrveAddressLookupVariables = {
 };
 
 type SyrveAddressLookupResult = {
-  cities: unknown[];
+  cities: SyrveAddressRecord[];
 };
 
 export function useSyrveAddressLookup(query?: string) {
