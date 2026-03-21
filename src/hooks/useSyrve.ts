@@ -59,9 +59,30 @@ export function useSyrveAddressCount(level?: 'region' | 'city' | 'street') {
 export function useSyrveAddressLookup(query?: string) {
   return { data: [] as any, isLoading: false };
 }
+type SyrveSyncAddressParams = {
+  activeOrganizationId: string;
+};
+
+type SyrveSyncAddressResult = {
+  count?: number;
+};
+
+type SyrveSyncAddressArg = string | SyrveSyncAddressParams;
+
 export function useSyrveSyncRegions() {
-  return { mutate: () => {}, mutateAsync: () => {}, isLoading: false, isPending: false };
+  return {
+    mutate: (_data: SyrveSyncAddressArg) => {},
+    mutateAsync: async (_data: SyrveSyncAddressArg): Promise<SyrveSyncAddressResult> => ({ count: 0 }),
+    isLoading: false,
+    isPending: false,
+  };
 }
 export function useSyrveSyncCities(regionId?: string) {
-  return { mutate: () => {}, mutateAsync: () => {}, isLoading: false, isPending: false };
+  void regionId;
+  return {
+    mutate: (_data: SyrveSyncAddressArg) => {},
+    mutateAsync: async (_data: SyrveSyncAddressArg): Promise<SyrveSyncAddressResult> => ({ count: 0 }),
+    isLoading: false,
+    isPending: false,
+  };
 }
