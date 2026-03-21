@@ -21,7 +21,7 @@ export function MarketingSimplePage({ pageKey }: { pageKey: "demo" | "contact" |
         </div>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          {page.primaryCta ? (
+          {"primaryCta" in page && page.primaryCta ? (
             <Button asChild className="rounded-full bg-slate-950 text-white hover:bg-slate-800">
               <Link href="/pilot">
                 {page.primaryCta}
