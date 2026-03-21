@@ -214,7 +214,7 @@ export default function OrdersPage() {
   const user = useAuthStore((s: any) => s.user);
   const accountId = currentAccount?.id ?? null;
   const { data: accountIntegrations } = useAccountIntegrations(accountId);
-  const canViewPii = useCanViewPii();
+  const { canView: canViewPii } = useCanViewPii();
   const { data: operators = [] } = useOrderOperators();
   const { data: assignmentPermissions } = useOrderAssignmentPermissions();
   const assignOrder = useAssignOrder();

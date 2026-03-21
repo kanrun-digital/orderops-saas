@@ -155,7 +155,7 @@ const isSameCourierInfo = (left: CourierInfo | null, right: CourierInfo | null):
 export default function OrderDetailsPage() {
   const params = useParams();
   const id = params?.id as string | undefined;
-  const canViewPii = useCanViewPii();
+  const { canView: canViewPii } = useCanViewPii();
 
   const { data, isLoading, error } = useOrder(id ?? '');
   const { data: isAdmin = false } = useIsSystemAdmin();
@@ -362,7 +362,9 @@ export default function OrderDetailsPage() {
   }
 
   const { order, items } = data;
-  const operatorsById = new Map(operators.map((operator: any) => [operator.id, operator]));
+  const operatorsById = new Map<string, { full_name?: string; email?: string }>(
+    operators.map((operator: any) => [operator.id, operator]),
+  );
   const crmOperatorInfo = parseCrmOperatorInfo(order.crm_operator_info);
   const crmOperatorSyncedAt = order.crm_operator_synced_at || crmOperatorInfo?.synced_at || null;
   const crmOperatorPhone = crmOperatorInfo
