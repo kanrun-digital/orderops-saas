@@ -504,10 +504,10 @@ export default function OrdersPage() {
 
       if (
         response?.orderInfo?.creationStatus &&
-        response.orderInfo.creationStatus.toLowerCase() !== 'success'
+        (response.orderInfo.creationStatus ?? 'unknown').toLowerCase() !== 'success'
       ) {
         throw createLocalizedError('orders.errors.syrveStatus', {
-          status: response.orderInfo.creationStatus,
+          status: response.orderInfo.creationStatus ?? 'unknown',
         });
       }
 
@@ -669,7 +669,7 @@ export default function OrdersPage() {
           }
           if (response?.orderInfo?.creationStatus?.toLowerCase() !== 'success') {
             throw createLocalizedError('orders.errors.syrveStatus', {
-              status: response.orderInfo.creationStatus,
+              status: response.orderInfo.creationStatus ?? 'unknown',
             });
           }
           const syrveOrderId = response?.orderInfo?.order?.id ?? response?.orderInfo?.id;
