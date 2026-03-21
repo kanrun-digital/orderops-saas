@@ -13,7 +13,29 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-RUN node -e "try { console.log('Resolved @tanstack/react-query/package.json to', require.resolve('@tanstack/react-query/package.json')); } catch (error) { console.error('Failed to resolve @tanstack/react-query/package.json before next build. This indicates npm install did not produce the expected dependency.', error); process.exit(1); }"
+RUN node - <<'NODE_DIAGNOSTIC'
+const fs = require('fs');
+const path = require('path');
+
+const packageName = '@tanstack/react-query';
+const packageJsonPath = `${packageName}/package.json`;
+const directPath = path.join(process.cwd(), 'node_modules', packageName);
+
+console.log('[diagnostic] cwd =', process.cwd());
+console.log('[diagnostic] node version =', process.version);
+console.log('[diagnostic] direct path exists =', fs.existsSync(directPath), directPath);
+
+try {
+  const resolved = require.resolve(packageJsonPath);
+  const pkg = require(resolved);
+  console.log('[diagnostic] resolved package.json =', resolved);
+  console.log('[diagnostic] package version =', pkg.version);
+} catch (error) {
+  console.error('[diagnostic] failed to resolve @tanstack/react-query/package.json before next build');
+  console.error(error);
+  process.exit(1);
+}
+NODE_DIAGNOSTIC
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
