@@ -42,7 +42,7 @@ function useSyrveOrganizations(accountId: string | undefined) {
       });
       if (!res.ok) throw new Error('Failed to fetch syrve organizations');
       const json = await res.json();
-      return json.data ?? [];
+      return Array.isArray(json) ? json : [];
     },
     enabled: !!accountId,
   });

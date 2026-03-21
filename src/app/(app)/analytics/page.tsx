@@ -24,7 +24,7 @@ async function fetchAnalyticsSummary(accountId: string) {
   );
   if (!res.ok) throw new Error("Failed to fetch analytics");
   const json = await res.json();
-  return (json.data ?? [])[0] ?? null;
+  return (Array.isArray(json) ? json[0] : json) ?? null;
 }
 
 interface StatCardProps {

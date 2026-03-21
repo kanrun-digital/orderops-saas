@@ -79,7 +79,9 @@ export default function CustomerDetailsPage() {
       );
       if (!res.ok) return false;
       const json = await res.json();
-      return (json.data ?? []).length > 0;
+      if (Array.isArray(json)) return json.length > 0;
+      if (json === null) return false;
+      return typeof json === 'object';
     },
     enabled: !!currentAccount?.id && !!customer?.salesbox_customer_id,
   });

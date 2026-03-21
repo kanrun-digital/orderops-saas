@@ -229,7 +229,7 @@ export default function OrdersPage() {
         { credentials: 'include' },
       );
       const json = await res.json();
-      return json.data ?? [];
+      return Array.isArray(json) ? json : [];
     },
     enabled: !!accountId,
   });

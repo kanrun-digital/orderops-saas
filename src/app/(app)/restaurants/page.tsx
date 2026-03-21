@@ -140,7 +140,7 @@ export default function RestaurantsPage() {
       );
       if (!res.ok) throw new Error('Failed to fetch syrve organizations');
       const json = await res.json();
-      return json.data ?? [];
+      return Array.isArray(json) ? json : [];
     },
     enabled: !!currentAccount?.id && locationDialogOpen && locationSource === 'syrve',
   });
@@ -155,7 +155,7 @@ export default function RestaurantsPage() {
       );
       if (!res.ok) throw new Error('Failed to fetch syrve terminals');
       const json = await res.json();
-      return json.data ?? [];
+      return Array.isArray(json) ? json : [];
     },
     enabled: !!selectedSyrveOrgId && locationDialogOpen && locationSource === 'syrve',
   });
@@ -223,7 +223,7 @@ export default function RestaurantsPage() {
       });
       if (!res.ok) throw new Error('Failed to create location');
       const json = await res.json();
-      return json.data;
+      return json;
     },
     onSuccess: async () => {
       await refreshAccounts();

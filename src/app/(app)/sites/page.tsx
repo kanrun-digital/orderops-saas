@@ -33,7 +33,7 @@ async function fetchSites(accountId: string) {
   );
   if (!res.ok) throw new Error("Failed to fetch sites");
   const json = await res.json();
-  return json.data ?? [];
+  return Array.isArray(json) ? json : [];
 }
 
 async function deleteSite(siteId: string) {
