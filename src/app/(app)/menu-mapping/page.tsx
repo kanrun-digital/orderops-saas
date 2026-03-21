@@ -19,7 +19,7 @@ import { useMenuSyncProviders } from '@/hooks/useMenuSyncProviders';
 import { ArrowRight, Package, FolderTree, AlertCircle, ShoppingBag, MapPin, LayoutGrid } from 'lucide-react';
 import type { MappingProvider } from '@/lib/types/mappingProvider';
 
-const t = (key: string) => key;
+const t = (key: string, params?: Record<string, string | number>) => key;
 
 const VALID_STATUS_FILTERS = new Set(['all', 'linked', 'suggested', 'not_linked']);
 
