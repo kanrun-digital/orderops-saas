@@ -19,8 +19,17 @@ export function useSyrveTerminalGroups(orgId?: string | string[]) {
   return { data: [] as any, isLoading: false };
 }
 
+type SyrveRefreshOrderResult = {
+  order?: Record<string, unknown>;
+};
+
 export function useSyrveRefreshOrder() {
-  return { mutate: (data: any) => {}, mutateAsync: async (data: any) => {}, isLoading: false, isPending: false };
+  return {
+    mutate: (data: any) => {},
+    mutateAsync: async (data: any): Promise<SyrveRefreshOrderResult> => ({ order: {} }),
+    isLoading: false,
+    isPending: false,
+  };
 }
 
 export function useLocationSyrveConfig(locationId?: string) {
