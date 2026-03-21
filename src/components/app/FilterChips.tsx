@@ -5,7 +5,7 @@ export interface FilterChip {
   key?: string;
   label: string;
   value: string;
-  count?: unknown;
+  count?: number;
   onRemove?: () => void;
 }
 
