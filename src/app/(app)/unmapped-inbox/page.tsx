@@ -19,6 +19,7 @@ import { useAllMenuProducts, useMenuCategories, useModifierGroups } from '@/hook
 import { useProductMappingMatrix } from '@/hooks/useProductMappingMatrix';
 import { useMenuSyncProviders } from '@/hooks/useMenuSyncProviders';
 import { ProductDetailPanel } from '@/components/menu/ProductDetailPanel';
+import { ENTITY_TYPES } from '@/lib/constants/entities';
 import { Package, Puzzle, CheckCircle2, XCircle, Info, ArrowRight } from 'lucide-react';
 
 const t = (key: string) => key;
@@ -51,8 +52,8 @@ export default function UnmappedInbox() {
   const { data: modifierGroups, isLoading: modifiersLoading } = useModifierGroups();
 
   const { providers } = useMenuSyncProviders();
-  const { providerColumns, getMappingStatus } = useProductMappingMatrix("product");
-  const { providerColumns: modProviderColumns, getMappingStatus: getModMappingStatus } = useProductMappingMatrix("modifier_group");
+  const { providerColumns, getMappingStatus } = useProductMappingMatrix(ENTITY_TYPES.PRODUCT);
+  const { providerColumns: modProviderColumns, getMappingStatus: getModMappingStatus } = useProductMappingMatrix(ENTITY_TYPES.MODIFIER_GROUP);
 
   const categoryMap = useMemo(() => new Map((categories as any[])?.map((c: any) => [c.id, c.name]) ?? []), [categories]);
 
