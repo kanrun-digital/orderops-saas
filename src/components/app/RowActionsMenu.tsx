@@ -2,10 +2,12 @@
 import React from "react";
 
 export interface RowAction {
-  key: string;
+  key?: string;
   label: string;
   icon?: React.ReactNode;
   onClick: () => void;
+  primary?: boolean;
+  destructive?: boolean;
   variant?: "default" | "destructive";
   disabled?: boolean;
 }
