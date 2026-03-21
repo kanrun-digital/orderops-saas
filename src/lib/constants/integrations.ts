@@ -7,6 +7,7 @@ export const PROVIDER_CODES = {
   SYRVE: "syrve",
   POSTER: "poster",
   BITRIX: "bitrix",
+  BITRIX_SITE: "bitrix",
   SALESBOX: "salesbox",
   CHECKBOX: "checkbox",
   BOLT: "bolt",
