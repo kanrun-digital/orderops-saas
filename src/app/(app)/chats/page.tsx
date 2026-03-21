@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { PageHeader } from "@/components/app/PageHeader";
@@ -21,8 +21,7 @@ export default function ChatsPage() {
   const customerParam = searchParams.get("customer");
   const [statusFilter, setStatusFilter] = useState<"active" | "archived">("active");
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
-  const session = useAuthStore((s: any) => s.session);
-  const currentAccountId = session?.account?.id;
+  const currentAccountId = useAuthStore((s) => s.accountId);
   const queryClient = useQueryClient();
 
   const { data: chats = [], isLoading: chatsLoading } = useSalesboxChats(statusFilter);
