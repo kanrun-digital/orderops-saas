@@ -78,24 +78,29 @@ export function useSyrveAddressLookup(query?: string) {
     isPending: false,
   };
 }
-type SyrveSyncResult = {
+type SyrveSyncAddressParams = {
+  activeOrganizationId: string;
+};
+
+type SyrveSyncAddressResult = {
   count?: number;
 };
 
+type SyrveSyncAddressArg = string | SyrveSyncAddressParams;
+
 export function useSyrveSyncRegions() {
   return {
-    mutate: (_organizationId?: string) => undefined,
-    mutateAsync: async (_organizationId?: string): Promise<SyrveSyncResult> => ({ count: 0 }),
+    mutate: (_data: SyrveSyncAddressArg) => {},
+    mutateAsync: async (_data: SyrveSyncAddressArg): Promise<SyrveSyncAddressResult> => ({ count: 0 }),
     isLoading: false,
     isPending: false,
   };
 }
 export function useSyrveSyncCities(regionId?: string) {
   void regionId;
-
   return {
-    mutate: (_organizationId?: string) => undefined,
-    mutateAsync: async (_organizationId?: string): Promise<SyrveSyncResult> => ({ count: 0 }),
+    mutate: (_data: SyrveSyncAddressArg) => {},
+    mutateAsync: async (_data: SyrveSyncAddressArg): Promise<SyrveSyncAddressResult> => ({ count: 0 }),
     isLoading: false,
     isPending: false,
   };
