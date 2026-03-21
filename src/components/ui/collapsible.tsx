@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@/lib/utils";
 
 interface CollapsibleProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -15,8 +16,11 @@ const Collapsible = React.forwardRef<HTMLDivElement, CollapsibleProps>(
 );
 Collapsible.displayName = "Collapsible";
 
-const CollapsibleTrigger = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
-  (props, ref) => <button ref={ref} {...props} />
+const CollapsibleTrigger = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }>(
+  ({ asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+    return <Comp ref={ref} {...props} />;
+  }
 );
 CollapsibleTrigger.displayName = "CollapsibleTrigger";
 
