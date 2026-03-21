@@ -31,6 +31,15 @@ export interface ReadOptions {
   page?: number;
 }
 
+export interface PatchByFiltersOptions {
+  allowBulk?: boolean;
+}
+
+export interface PatchByFiltersResult<T = any> {
+  rows: T[];
+  updatedCount: number;
+}
+
 // ── Environment ────────────────────────────────
 
 export function env(): NcbEnv {
@@ -164,6 +173,40 @@ export async function update(
   });
   if (!res.ok) throw new Error(`NCB update ${table}/${pkId}: ${res.status} ${await res.text()}`);
   return res.json();
+}
+
+export async function patchByFilters<T = any>(
+  table: string,
+  filters: Record<string, string | number | boolean>,
+  data: Record<string, any>,
+  options?: PatchByFiltersOptions
+): Promise<PatchByFiltersResult<T>> {
+  const rows = await read<any>(table, { filters });
+
+  if (rows.length === 0) {
+    throw new Error(`NCB patchByFilters: ${table} not found for provided filters`);
+  }
+
+  if (rows.length > 1 && !options?.allowBulk) {
+    throw new Error(
+      `Bulk update is not allowed for ${table}. Use /api/data/{table}/{pkId} or provide filters that match exactly one row.`
+    );
+  }
+
+  const updatedRows = await Promise.all(
+    rows.map(async (row) => {
+      const pkId = Number(row?.pk_id);
+      if (!pkId) {
+        throw new Error(`NCB patchByFilters: ${table} row is missing pk_id`);
+      }
+      return update(table, pkId, data);
+    })
+  );
+
+  return {
+    rows: updatedRows as T[],
+    updatedCount: updatedRows.length,
+  };
 }
 
 export async function updateByUuid(

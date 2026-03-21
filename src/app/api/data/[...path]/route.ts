@@ -1,6 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as ncb from "@/lib/ncb";
 
+function getFilters(searchParams: URLSearchParams): Record<string, string> {
+  const filters: Record<string, string> = {};
+  searchParams.forEach((v: string, k: string) => {
+    if (!k.startsWith("_")) filters[k] = v;
+  });
+  return filters;
+}
+
+function isAllowedStopListBulkUpdate(
+  table: string,
+  filters: Record<string, string>
+): boolean {
+  return table === "menu_products" && filters.is_in_stop_list === "eq.true";
+}
+
 export async function GET(
   req: NextRequest,
   { params }: { params: any }
@@ -10,10 +25,7 @@ export async function GET(
     const table = segments[0];
     const searchParams = req.nextUrl.searchParams;
 
-    const filters: Record<string, string> = {};
-    searchParams.forEach((v: string, k: string) => {
-      if (!k.startsWith("_")) filters[k] = v;
-    });
+    const filters = getFilters(searchParams);
 
     const cookie = ncb.getCookie(req);
     const options: ncb.ReadOptions = {
@@ -72,6 +84,56 @@ export async function PUT(
     return NextResponse.json(data);
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: any }
+) {
+  try {
+    const segments = (await params).path as string[];
+    const table = segments[0];
+    const body = (await req.json()) as any;
+    const searchParams = req.nextUrl.searchParams;
+    const filters = getFilters(searchParams);
+    const pkId = Number(segments[1]);
+
+    if (pkId) {
+      const data = await ncb.update(table, pkId, body);
+      return NextResponse.json({ data, meta: { updatedCount: 1, mode: "pk_id" } });
+    }
+
+    if (Object.keys(filters).length === 0) {
+      return NextResponse.json(
+        {
+          error:
+            "PATCH requires either /api/data/{table}/{pkId} or at least one filter query param such as ?id=eq...",
+        },
+        { status: 400 }
+      );
+    }
+
+    const allowBulk = isAllowedStopListBulkUpdate(table, filters);
+    const result = await ncb.patchByFilters(table, filters, body, { allowBulk });
+
+    return NextResponse.json({
+      data: result.rows,
+      meta: {
+        updatedCount: result.updatedCount,
+        mode: allowBulk ? "filters_bulk" : "filters",
+        filters,
+      },
+    });
+  } catch (err: any) {
+    const message = err?.message || "Unknown error";
+    const status = /not found/i.test(message)
+      ? 404
+      : /bulk update/i.test(message) || /requires/i.test(message)
+        ? 400
+        : 500;
+
+    return NextResponse.json({ error: message }, { status });
   }
 }
 

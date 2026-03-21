@@ -16,6 +16,7 @@ import { Switch } from '@/components/ui/switch';
 import { User, Loader2, Database, Users, Globe } from 'lucide-react';
 import { PageHeader } from '@/components/app/PageHeader';
 import { toast } from 'sonner';
+import { updateByFilters } from '@/lib/data-client';
 import { DataCleanupTab } from '@/components/settings/DataCleanupTab';
 import { MappingHub } from '@/components/settings/MappingHub';
 
@@ -86,19 +87,14 @@ export default function SettingsPage() {
     };
 
     try {
-      const res = await fetch(`/api/data/accounts?id=eq.${currentAccount.id}`, {
-        method: 'PATCH',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ settings: newSettings }),
+      await updateByFilters({
+        table: 'accounts',
+        filters: { id: currentAccount.id },
+        data: { settings: newSettings },
       });
 
-      if (!res.ok) {
-        toast.error(t('settings.notifications.updateError'));
-      } else {
-        await refreshAccounts();
-        toast.success(t('settings.notifications.updateSuccess'));
-      }
+      await refreshAccounts();
+      toast.success(t('settings.notifications.updateSuccess'));
     } catch (err) {
       toast.error(t('settings.notifications.updateError'));
     }

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { PageHeader } from "@/components/app/PageHeader";
 import {
@@ -23,6 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ExternalLink, QrCode, Trash2, Plus, Globe } from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
 import { toast } from "sonner";
+import { updateByFilters } from "@/lib/data-client";
 
 const t = (key: string) => key;
 
@@ -46,13 +46,11 @@ async function deleteSite(siteId: string) {
 
 async function togglePublishSite(site: any) {
   const newStatus = site.status === "published" ? "draft" : "published";
-  const res = await fetch(`/api/data/public_sites?id=eq.${site.id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify({ status: newStatus }),
+  await updateByFilters({
+    table: "public_sites",
+    filters: { id: site.id },
+    data: { status: newStatus },
   });
-  if (!res.ok) throw new Error("Failed to update site status");
 }
 
 const STATUS_BADGE: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
