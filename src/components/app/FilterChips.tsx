@@ -17,8 +17,9 @@ export function FilterChips({ className, ...props }: FilterChipsProps) {
 export default FilterChips;
 
 export interface FilterChip {
-  key: string;
+  key?: string;
   label: string;
   value: string;
+  count?: number;
   onRemove?: () => void;
 }
