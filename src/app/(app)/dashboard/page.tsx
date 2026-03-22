@@ -1,6 +1,8 @@
 "use client";
 
 import Link from 'next/link';
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useProfile } from '@/hooks/useProfile';
 import { useOrders } from '@/hooks/useOrders';
 import { useAllMenuProducts } from '@/hooks/useMenu';
@@ -25,7 +27,6 @@ import {
   Link2Off,
   Bell,
 } from 'lucide-react';
-import { useMemo } from 'react';
 import { statusMeta, type OrderStatus } from '@/lib/orders/config';
 import { cn } from '@/lib/utils';
 import { formatDateFns } from '@/lib/utils/formatDateTime';
@@ -34,6 +35,8 @@ import { ROUTES } from '@/constants/routes';
 const t = (key: string, params?: Record<string, any>) => key;
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const [sessionLoading, setSessionLoading] = useState(true);
   const currentLanguage = 'uk'; // default language
   const { data: profile, isLoading: profileLoading } = useProfile();
   const { data: orders, isLoading: ordersLoading } = useOrders();
@@ -53,6 +56,39 @@ export default function DashboardPage() {
     : profile?.full_name
       ? t('dashboard.welcomeName', { name: profile.full_name })
       : t('dashboard.welcome');
+
+  useEffect(() => {
+    let active = true;
+
+    fetch('/api/auth/get-session', {
+      credentials: 'include',
+      cache: 'no-store',
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!active) return;
+
+        if (data?.user) {
+          setSessionLoading(false);
+          return;
+        }
+
+        router.push(ROUTES.login);
+      })
+      .catch(() => {
+        if (!active) return;
+        router.push(ROUTES.login);
+      })
+      .finally(() => {
+        if (active) {
+          setSessionLoading(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [router]);
 
   const summaryItems: SummaryItem[] = useMemo(() => {
     const items: SummaryItem[] = [
@@ -112,6 +148,16 @@ export default function DashboardPage() {
 
     return items;
   }, [orders, products, health]);
+
+  if (sessionLoading) {
+    return (
+      <AppLayout>
+        <div className="flex min-h-[40vh] items-center justify-center text-sm text-muted-foreground">
+          Validating your session…
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>
