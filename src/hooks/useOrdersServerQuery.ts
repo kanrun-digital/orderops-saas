@@ -49,6 +49,36 @@ export interface UnifiedOrder {
   [key: string]: any;
 }
 
+export interface ParsedCrmOperatorInfo {
+  phone?: string | null;
+  phoneMasked?: string | null;
+  _debugRawValue?: string;
+  [key: string]: unknown;
+}
+
+function parseCrmOperatorInfo(value: unknown): ParsedCrmOperatorInfo | null {
+  if (!value) return null;
+
+  if (typeof value === "object") {
+    return value as ParsedCrmOperatorInfo;
+  }
+
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(value);
+    return parsed && typeof parsed === "object"
+      ? (parsed as ParsedCrmOperatorInfo)
+      : null;
+  } catch {
+    return process.env.NODE_ENV === "development"
+      ? { _debugRawValue: value }
+      : null;
+  }
+}
+
 export interface OrdersServerQueryFacets {
   perStatus: Record<string, number>;
   perSource: Record<string, number>;
@@ -116,7 +146,7 @@ export function useOrdersServerQuery(params?: any) {
         bitrixOrderId: o.bitrix_order_id,
         salesboxOrderId: o.salesbox_order_id,
         processingOperatorId: o.processing_operator_id,
-        crmOperatorInfo: o.crm_operator_info ? (typeof o.crm_operator_info === "string" ? JSON.parse(o.crm_operator_info) : o.crm_operator_info) : null,
+        crmOperatorInfo: parseCrmOperatorInfo(o.crm_operator_info),
       }));
 
       const totalCount = (res as any).total ?? orders.length;
