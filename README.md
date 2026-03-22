@@ -102,7 +102,7 @@ Key architectural points:
 - browser-facing routes are exposed through internal Next.js API routes
 - the application uses React Query for client data orchestration
 
-This means the current codebase is **not** a Vite/Supabase-first frontend; it is a **Next.js + NCB** application structure.
+This codebase is structured as a **Next.js + NCB** application, with Next.js handling the frontend and internal API surface while NCB provides the backend data and authentication integration layer.
 
 ## Application Areas
 
