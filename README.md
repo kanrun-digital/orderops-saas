@@ -124,6 +124,7 @@ This means the current codebase is **not** a Vite/Supabase-first frontend; it is
 - Assignment workflows
 - Provider-aware actions
 - PII-aware handling hooks
+- Order lifecycle reference: `docs/order-lifecycle.md`
 
 ### Customers
 - Customer directory
