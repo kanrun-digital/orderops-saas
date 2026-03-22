@@ -70,7 +70,6 @@ import { useProviderConnections } from '@/hooks/useCustomerDataOps';
 import { useAccount } from '@/contexts/AccountContext';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { toast } from 'sonner';
-import { useSalesboxUpdateOrderStatus } from '@/hooks/salesbox';
 import { useCanViewPii } from '@/hooks/useOrderPii';
 import { useAssignOrder, useOrderAssignmentPermissions, useOrderOperators } from '@/hooks/useOrderAssignments';
 import {
@@ -276,7 +275,6 @@ export default function OrdersPage() {
   const deleteOrder = useDeleteOrder();
   const bitrixUpdateStatus = useBitrixUpdateOrderStatus();
   const boltOrderAction = useBoltOrderAction();
-  const salesboxUpdateStatus = useSalesboxUpdateOrderStatus();
   const queryClient = useQueryClient();
 
   // Dynamic source filter options from active connections
@@ -536,7 +534,7 @@ export default function OrdersPage() {
       salesbox: async (order) => {
         const salesboxOrderId = order.salesboxOrderId ?? order.externalId;
         if (!salesboxOrderId) throw createLocalizedError('orders.errors.salesboxOrderIdMissing');
-        await salesboxUpdateStatus.mutateAsync({ orderId: salesboxOrderId, status: 'cancelled' });
+        await platformApi.pushStatus('salesbox', salesboxOrderId, 'cancelled');
       },
       bolt_food: async (order) => {
         const boltProviderId = order.externalId;
@@ -570,7 +568,7 @@ export default function OrdersPage() {
         await platformApi.pushStatus(PROVIDER_CODES.MENU_UA, externalOrderId, 'cancelled');
       },
     }),
-    [bitrixUpdateStatus, boltOrderAction, createLocalizedError, salesboxUpdateStatus],
+    [bitrixUpdateStatus, boltOrderAction, createLocalizedError],
   );
 
   const handleCancelOrder = async () => {
