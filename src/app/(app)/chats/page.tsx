@@ -66,7 +66,7 @@ export default function ChatsPage() {
     }
   }, [selectedChatId, selectedChat?.unread_count]);
 
-  // Polling fallback for realtime updates (replaces Supabase realtime subscription)
+  // Periodically refresh chats and messages to keep the conversation list up to date
   useEffect(() => {
     if (!currentAccountId) return;
     const interval = setInterval(() => {
