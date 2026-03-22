@@ -86,7 +86,7 @@ The project follows a modular Next.js structure:
 
 - `src/app` — application routes and page-level features
 - `src/components` — reusable UI primitives and domain-specific components
-- `src/hooks` — data-fetching and feature hooks
+- `src/hooks` — data-fetching, API orchestration, and UI helper hooks (canonical inventory: `docs/hooks-catalog.md`)
 - `src/services` — shared API and auth service helpers
 - `src/lib` — domain constants, integration helpers, utilities, and core logic
 - `src/contexts` / `src/stores` — account/auth state and client-side state management
