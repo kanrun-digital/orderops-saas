@@ -5,7 +5,8 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN npm ci
+RUN npm ci \
+  && test -d /app/node_modules/@tanstack/query-core
 
 # --- Builder ---
 FROM base AS builder
