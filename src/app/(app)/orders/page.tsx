@@ -68,7 +68,7 @@ import { useAccountIntegrations } from '@/hooks/useAccountIntegrations';
 import { useIsSystemAdmin } from '@/hooks/useSystemAdmin';
 import { useProviderConnections } from '@/hooks/useCustomerDataOps';
 import { useAccount } from '@/contexts/AccountContext';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { useAuthStore } from '@/stores/auth-store';
 import { toast } from 'sonner';
 import { useCanViewPii } from '@/hooks/useOrderPii';
 import { useAssignOrder, useOrderAssignmentPermissions, useOrderOperators } from '@/hooks/useOrderAssignments';
@@ -212,7 +212,19 @@ export default function OrdersPage() {
   );
 
   const { currentAccount, currentLocation, currentRole, loading: accountLoading } = useAccount();
-  const user = useAuthStore((s: any) => s.user);
+  const session = useAuthStore((s) => s.session);
+  const profile = useAuthStore((s) => s.profile);
+  const displayName = useAuthStore((s) => s.displayName);
+  const currentUser = useMemo(() => {
+    if (!session) return null;
+
+    return {
+      id: session.id,
+      email: session.email,
+      name: displayName ?? profile?.display_name ?? profile?.full_name ?? session.email,
+      role: session.role ?? null,
+    };
+  }, [displayName, profile?.display_name, profile?.full_name, session]);
   const accountId = currentAccount?.id ?? null;
   const { data: accountIntegrations } = useAccountIntegrations(accountId);
   const { canView: canViewPii } = useCanViewPii();
@@ -739,7 +751,7 @@ export default function OrdersPage() {
   const buildRowActions = (order: UnifiedOrder): RowAction[] => {
     const actions: RowAction[] = [];
     const canEditAssignments = Boolean(assignmentPermissions?.canEditAssignments);
-    const isCurrentOperator = user?.id && order.processingOperatorId === user.id;
+    const isCurrentOperator = currentUser?.id && order.processingOperatorId === currentUser.id;
     actions.push({
       key: 'view-details',
       label: t('orders.viewDetails'),
@@ -761,8 +773,8 @@ export default function OrdersPage() {
         key: 'take-order',
         label: 'Взяти в роботу',
         icon: <Package className="h-4 w-4" />,
-        onClick: () => assignOrder.mutate({ orderId: order.id, nextOperatorId: user?.id ?? null, action: 'take' }),
-        disabled: !user?.id || assignOrder.isPending,
+        onClick: () => assignOrder.mutate({ orderId: order.id, nextOperatorId: currentUser?.id ?? null, action: 'take' }),
+        disabled: !currentUser?.id || assignOrder.isPending,
       });
     }
     if (order.processingOperatorId) {

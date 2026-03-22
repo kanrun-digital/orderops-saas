@@ -1,7 +1,7 @@
 "use client";
 
 import { parseJsonSettings } from '@/lib/utils/settings';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
@@ -31,7 +31,7 @@ import { OrderSyncTimeline } from '@/components/orders/OrderSyncTimeline';
 import { useAccount } from '@/contexts/AccountContext';
 import { useSelectedSyrveOrganization, useSyrveRefreshOrder, useLocationSyrveConfig } from '@/hooks/useSyrve';
 import { useAssignOrder, useOrderAssignmentHistory, useOrderAssignmentPermissions, useOrderOperators } from '@/hooks/useOrderAssignments';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { useAuthStore } from '@/stores/auth-store';
 import { useCanViewPii } from '@/hooks/useOrderPii';
 import { getPhoneByPiiPolicy } from '@/lib/orders/piiPhone';
 import { resolveAssignedOperator } from '@/lib/orders/assignedOperator';
@@ -163,7 +163,19 @@ export default function OrderDetailsPage() {
   const { data: isAdmin = false } = useIsSystemAdmin();
   const { currentAccount } = useAccount();
   const { data: selectedOrg } = useSelectedSyrveOrganization();
-  const user = useAuthStore((s: any) => s.user);
+  const session = useAuthStore((s) => s.session);
+  const profile = useAuthStore((s) => s.profile);
+  const displayName = useAuthStore((s) => s.displayName);
+  const currentUser = useMemo(() => {
+    if (!session) return null;
+
+    return {
+      id: session.id,
+      email: session.email,
+      name: displayName ?? profile?.display_name ?? profile?.full_name ?? session.email,
+      role: session.role ?? null,
+    };
+  }, [displayName, profile?.display_name, profile?.full_name, session]);
   const { data: operators = [] } = useOrderOperators();
   const { data: assignmentPermissions } = useOrderAssignmentPermissions();
   const assignmentHistory = useOrderAssignmentHistory(id);
@@ -445,8 +457,8 @@ export default function OrderDetailsPage() {
             <div className="flex flex-wrap gap-2">
               <Button
                 size="sm"
-                onClick={() => assignOrder.mutate({ orderId: order.id, nextOperatorId: user?.id ?? null, action: 'take' })}
-                disabled={!assignmentPermissions?.canEditAssignments || !user?.id}
+                onClick={() => assignOrder.mutate({ orderId: order.id, nextOperatorId: currentUser?.id ?? null, action: 'take' })}
+                disabled={!assignmentPermissions?.canEditAssignments || !currentUser?.id}
               >
                 {t('orders.processing.actionTake')}
               </Button>
