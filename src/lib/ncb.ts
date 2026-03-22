@@ -45,8 +45,8 @@ export interface PatchByFiltersResult<T = any> {
 export function env(): NcbEnv {
   return {
     instance: process.env["NCB_INSTANCE"] || "",
-    dataUrl: process.env["NCB_DATA_URL"] || "https://openapi.nocodebackend.com",
-    authUrl: process.env["NCB_AUTH_URL"] || "https://app.nocodebackend.com/api/user-auth",
+    dataUrl: process.env["NCB_DATA_API_URL"] || "",
+    authUrl: process.env["NCB_AUTH_API_URL"] || "",
     secretKey: process.env["NCB_SECRET_KEY"] || "",
   };
 }
