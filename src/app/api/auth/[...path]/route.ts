@@ -11,6 +11,56 @@ function assertConfig() {
   return config;
 }
 
+function buildUpstreamUrl(req: NextRequest, path: string, instance: string, apiUrl: string) {
+  const searchParams = new URLSearchParams(req.nextUrl.searchParams);
+
+  if (!searchParams.has("instance") && !searchParams.has("Instance")) {
+    searchParams.set("instance", instance);
+  }
+
+  const query = searchParams.toString();
+  return `${apiUrl}/${path}${query ? `?${query}` : ""}`;
+}
+
+function getForwardedOrigin(req: NextRequest) {
+  return req.headers.get("origin") || req.nextUrl.origin;
+}
+
+function getForwardedContentType(req: NextRequest) {
+  return req.headers.get("content-type") || "application/json";
+}
+
+function transformSetCookie(cookie: string) {
+  const parts = cookie.split(";");
+  const [nameValue, ...attributes] = parts.map((part) => part.trim());
+
+  let normalizedNameValue = nameValue;
+  if (nameValue.startsWith("__Secure-better-auth.")) {
+    normalizedNameValue = nameValue.replace("__Secure-", "");
+  } else if (nameValue.startsWith("__Host-better-auth.")) {
+    normalizedNameValue = nameValue.replace("__Host-", "");
+  }
+
+  const filteredAttributes = attributes.filter((attribute) => {
+    const lower = attribute.toLowerCase();
+    return !lower.startsWith("domain=") && lower !== "secure";
+  });
+
+  return [normalizedNameValue, ...filteredAttributes].join("; ");
+}
+
+function buildResponseHeaders(upstreamResponse: Response) {
+  const headers = new Headers();
+  headers.set("Content-Type", upstreamResponse.headers.get("content-type") || "application/json");
+
+  const location = upstreamResponse.headers.get("location");
+  if (location) {
+    headers.set("Location", location);
+  }
+
+  return headers;
+}
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ path: string[] }> }
@@ -51,48 +101,27 @@ export async function DELETE(
   return proxyRequest(req, path.join("/"), await req.text());
 }
 
-function transformSetCookie(cookie: string) {
-  const parts = cookie.split(";");
-  const [nameValue, ...attributes] = parts.map((part) => part.trim());
-
-  let normalizedNameValue = nameValue;
-  if (nameValue.startsWith("__Secure-better-auth.")) {
-    normalizedNameValue = nameValue.replace("__Secure-", "");
-  } else if (nameValue.startsWith("__Host-better-auth.")) {
-    normalizedNameValue = nameValue.replace("__Host-", "");
-  }
-
-  const filteredAttributes = attributes.filter((attribute) => {
-    const lower = attribute.toLowerCase();
-    return !lower.startsWith("domain=") && lower !== "secure";
-  });
-
-  return [normalizedNameValue, ...filteredAttributes].join("; ");
-}
-
 async function proxyRequest(req: NextRequest, path: string, body?: string) {
   const config = assertConfig();
-
-  const searchParams = req.nextUrl.search;
-  const url = `${config.apiUrl}/${path}${searchParams}`;
+  const url = buildUpstreamUrl(req, path, config.instance, config.apiUrl);
 
   const upstreamResponse = await fetch(url, {
     method: req.method,
     headers: {
-      "Content-Type": req.headers.get("content-type") ?? "application/json",
+      "Content-Type": getForwardedContentType(req),
       "X-Database-Instance": config.instance,
       Authorization: `Bearer ${config.secretKey}`,
       Cookie: req.headers.get("cookie") ?? "",
+      Origin: getForwardedOrigin(req),
     },
     body: body || undefined,
     cache: "no-store",
+    redirect: "manual",
   });
 
   const response = new NextResponse(await upstreamResponse.text(), {
     status: upstreamResponse.status,
-    headers: {
-      "Content-Type": upstreamResponse.headers.get("content-type") ?? "application/json",
-    },
+    headers: buildResponseHeaders(upstreamResponse),
   });
 
   const setCookies = upstreamResponse.headers.getSetCookie?.() ?? [];
