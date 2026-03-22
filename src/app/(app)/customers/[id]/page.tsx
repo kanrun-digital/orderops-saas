@@ -34,6 +34,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip
 import { useQuery } from '@tanstack/react-query';
 import { useCustomerSegment } from '@/hooks/useCustomerSegments';
 import { ValueSegmentBadge, RecencySegmentBadge } from '@/components/customers/SegmentBadge';
+import { ROUTES } from '@/constants/routes';
 
 const t = (key: string) => key;
 
@@ -113,7 +114,7 @@ export default function CustomerDetailsPage() {
     return (
       <AppLayout>
         <div className="space-y-6">
-          <Link href="/customers">
+          <Link href={ROUTES.customers}>
             <Button variant="ghost" className="gap-2">
               <ArrowLeft className="h-4 w-4" />
               {t('customerDetails.backToCustomers')}
@@ -146,7 +147,7 @@ export default function CustomerDetailsPage() {
             </div>
           ) : undefined}
           breadcrumbs={
-            <Link href="/customers">
+            <Link href={ROUTES.customers}>
               <Button variant="ghost" size="sm" className="gap-2 -ml-2">
                 <ArrowLeft className="h-4 w-4" />
                 {t('customerDetails.backToCustomers')}
@@ -402,7 +403,7 @@ export default function CustomerDetailsPage() {
           onOpenChange={setMergeDialogOpen}
           primaryCustomer={customer}
           onMerged={(customerId: any) => {
-            router.push(`/customers/${customerId}`);
+            router.push(ROUTES.customerDetail(customerId));
           }}
         />
 

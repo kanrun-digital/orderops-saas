@@ -21,8 +21,6 @@ export const ROUTES = {
   menu: "/menu",
   menuSources: "/menu-sources",
   menuMapping: "/menu-mapping",
-  menuItem: (id: string) => `/menu/${id}`,
-  settings: "/settings",
   integrations: "/integrations",
   qrMenu: "/qr-menu",
   restaurants: "/restaurants",
@@ -31,7 +29,13 @@ export const ROUTES = {
   sites: "/sites",
   staff: "/staff",
   reviews: "/reviews",
+  settings: "/settings",
   syncDashboard: "/sync-dashboard",
+  analytics: "/analytics",
+  billing: "/billing",
+  stopList: "/stop-list",
+  syrveAddresses: "/syrve-addresses",
+  unmappedInbox: "/unmapped-inbox",
 } as const;
 
 // ── API Routes ─────────────────────────────────

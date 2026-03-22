@@ -18,20 +18,28 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-const NAV_ITEMS = [
-  { label: "Dashboard", href: ROUTES.dashboard, icon: LayoutDashboard },
-  { label: "Orders", href: ROUTES.orders, icon: ShoppingBag },
-  { label: "Customers", href: ROUTES.customers, icon: Users },
-  { label: "Menu", href: ROUTES.menu, icon: UtensilsCrossed },
-  { label: "Settings", href: ROUTES.settings, icon: Settings },
-];
+const APP_NAV_ITEMS = [
+  { key: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { key: "orders", label: "Orders", icon: ShoppingBag },
+  { key: "customers", label: "Customers", icon: Users },
+  { key: "menu", label: "Menu", icon: UtensilsCrossed },
+  { key: "settings", label: "Settings", icon: Settings },
+] as const satisfies ReadonlyArray<{
+  key: keyof typeof ROUTES;
+  label: string;
+  icon: typeof LayoutDashboard;
+}>;
 
-const BOTTOM_NAV = [
-  { label: "Home", href: ROUTES.dashboard, icon: LayoutDashboard },
-  { label: "Orders", href: ROUTES.orders, icon: ShoppingBag },
-  { label: "Menu", href: ROUTES.menu, icon: UtensilsCrossed },
-  { label: "More", href: ROUTES.settings, icon: Menu },
-];
+const NAV_ITEMS = APP_NAV_ITEMS.map((item) => ({
+  ...item,
+  href: ROUTES[item.key],
+}));
+
+const BOTTOM_NAV = APP_NAV_ITEMS.filter(({ key }) => ["dashboard", "orders", "menu", "settings"].includes(key)).map((item) => ({
+  ...item,
+  label: item.key === "settings" ? "More" : item.label,
+  href: ROUTES[item.key],
+}));
 
 export default function AppLayout({
   children,

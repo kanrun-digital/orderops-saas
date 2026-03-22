@@ -423,25 +423,25 @@ export default function OrdersPage() {
       return {
         canSend: false,
         reasonKey: 'orders.posBlockNoCredentials',
-        href: '/app/integrations',
+        href: ROUTES.integrations,
       } as const;
     if (!currentLocation)
       return {
         canSend: false,
         reasonKey: 'orders.posBlockNoLocation',
-        href: '/app/restaurants',
+        href: ROUTES.restaurants,
       } as const;
     if (!currentLocation.syrve_org_id)
       return {
         canSend: false,
         reasonKey: 'orders.posBlockNoOrg',
-        href: '/app/restaurants',
+        href: ROUTES.restaurants,
       } as const;
     if (!currentLocation.syrve_terminal_group_id)
       return {
         canSend: false,
         reasonKey: 'orders.posBlockNoTerminal',
-        href: '/app/restaurants',
+        href: ROUTES.restaurants,
       } as const;
     return { canSend: true, reasonKey: null, href: null } as const;
   }, [syrveConnection, currentLocation]);
@@ -753,7 +753,7 @@ export default function OrdersPage() {
       key: 'view-details',
       label: t('orders.viewDetails'),
       icon: <ExternalLink className="h-4 w-4" />,
-      onClick: () => router.push(`/app/orders/${order.id}`),
+      onClick: () => router.push(ROUTES.orderDetail(order.id)),
       variant: 'default',
     });
     if (!order.syrveOrderId && order.source !== 'internal') {
@@ -1130,7 +1130,7 @@ export default function OrdersPage() {
                                 <Tooltip>
                                   <TooltipTrigger asChild>
                                     <Link
-                                      href={`/app/orders/${order.id}`}
+                                      href={ROUTES.orderDetail(order.id)}
                                       className="inline-block max-w-[180px] truncate font-medium text-primary hover:underline"
                                     >
                                       #{orderDisplayId}
