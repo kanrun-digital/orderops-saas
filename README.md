@@ -235,6 +235,7 @@ Required variables:
 
 ```env
 NCB_INSTANCE=55446_orderops_systems
+NCB_API_URL=https://app.nocodebackend.com/api/user-auth
 NCB_DATA_API_URL=https://openapi.nocodebackend.com
 NCB_AUTH_API_URL=https://app.nocodebackend.com/api/user-auth
 NCB_SECRET_KEY=<your_ncb_secret_key>
@@ -273,8 +274,9 @@ npm run lint
 | Variable | Required | Description |
 |---|---:|---|
 | `NCB_INSTANCE` | Yes | NCB instance identifier used by the backend client |
+| `NCB_API_URL` | Yes | Canonical base URL for NCB auth/provider API routes |
 | `NCB_DATA_API_URL` | Yes | Base URL for NCB data API |
-| `NCB_AUTH_API_URL` | Yes | Base URL for NCB auth/session API |
+| `NCB_AUTH_API_URL` | Legacy alias | Backward-compatible alias for `NCB_API_URL` in older deployments |
 | `NCB_SECRET_KEY` | Yes | Secret key used for server-side NCB requests |
 | `NEXT_PUBLIC_APP_URL` | Yes | Public application URL for redirects and browser-facing links |
 | `UNIONE_API_KEY` | No | Email delivery integration key |

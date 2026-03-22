@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-
-const NCB_CONFIG = {
-  instance: process.env.NCB_INSTANCE ?? "",
-  apiUrl: process.env.NCB_API_URL ?? "",
-  secretKey: process.env.NCB_SECRET_KEY ?? "",
-};
+import { getNcbAuthConfig } from "@/lib/ncb-auth-config";
 
 function assertConfig() {
-  if (!NCB_CONFIG.instance || !NCB_CONFIG.apiUrl || !NCB_CONFIG.secretKey) {
+  const config = getNcbAuthConfig();
+
+  if (!config.instance || !config.apiUrl || !config.secretKey) {
     throw new Error("Missing NoCodeBackend auth proxy configuration");
   }
+
+  return config;
 }
 
 export async function GET(
@@ -72,17 +71,17 @@ function transformSetCookie(cookie: string) {
 }
 
 async function proxyRequest(req: NextRequest, path: string, body?: string) {
-  assertConfig();
+  const config = assertConfig();
 
   const searchParams = req.nextUrl.search;
-  const url = `${NCB_CONFIG.apiUrl}/${path}${searchParams}`;
+  const url = `${config.apiUrl}/${path}${searchParams}`;
 
   const upstreamResponse = await fetch(url, {
     method: req.method,
     headers: {
       "Content-Type": req.headers.get("content-type") ?? "application/json",
-      "X-Database-Instance": NCB_CONFIG.instance,
-      Authorization: `Bearer ${NCB_CONFIG.secretKey}`,
+      "X-Database-Instance": config.instance,
+      Authorization: `Bearer ${config.secretKey}`,
       Cookie: req.headers.get("cookie") ?? "",
     },
     body: body || undefined,
