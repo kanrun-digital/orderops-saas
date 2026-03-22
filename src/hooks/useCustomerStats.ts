@@ -4,6 +4,36 @@ import { useQuery } from "@tanstack/react-query";
 import { apiGet } from "@/services/api-client";
 import { useAuthStore } from "@/stores/auth-store";
 
+export interface CustomerStatsPerConnection {
+  connection_id: string;
+  connection_name: string;
+  customer_count: number;
+}
+
+export interface CustomerStatsResult {
+  total: number;
+  active: number;
+  new: number;
+  returning: number;
+  churned: number;
+  totalCustomerCount: number;
+  matchedCount: number;
+  noExternalCount: number;
+  perConnection: CustomerStatsPerConnection[];
+}
+
+const EMPTY_CUSTOMER_STATS: CustomerStatsResult = {
+  total: 0,
+  active: 0,
+  new: 0,
+  returning: 0,
+  churned: 0,
+  totalCustomerCount: 0,
+  matchedCount: 0,
+  noExternalCount: 0,
+  perConnection: [],
+};
+
 export function useCustomerStats() {
   const accountId = useAuthStore((s) => s.accountId);
 
@@ -37,13 +67,23 @@ export function useCustomerStats() {
 
       const churned = total - active;
 
-      return { total, active, new: newCount, returning, churned: Math.max(0, churned) };
+      return {
+        total,
+        active,
+        new: newCount,
+        returning,
+        churned: Math.max(0, churned),
+        totalCustomerCount: total,
+        matchedCount: 0,
+        noExternalCount: 0,
+        perConnection: [],
+      } as CustomerStatsResult;
     },
     enabled: !!accountId,
   });
 
   return {
-    data: query.data ?? { total: 0, active: 0, new: 0, returning: 0, churned: 0 },
+    data: query.data ?? EMPTY_CUSTOMER_STATS,
     isLoading: query.isLoading,
     error: query.error,
     refetch: query.refetch,

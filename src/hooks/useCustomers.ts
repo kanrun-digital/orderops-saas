@@ -30,6 +30,17 @@ export interface UseCustomersParams {
   sourceFilter?: SourceFilter;
 }
 
+export interface CustomerRecord {
+  id: string;
+  [key: string]: any;
+}
+
+export interface CustomersQueryResult {
+  customers: CustomerRecord[];
+  totalCount: number;
+  totalPages: number;
+}
+
 export interface UseCustomersQueryParams {
   page?: string;
   pageSize?: string;
@@ -107,15 +118,25 @@ export function useCustomers(params: UseCustomersParams = {}) {
           break;
       }
 
-      return apiGet<{ data: any[]; total?: number }>(
+      return apiGet<{ data: CustomerRecord[]; total?: number }>(
         `/api/data/customers?${sp.toString()}`
-      ).then((r) => r.data);
+      ).then((r) => {
+        const customers = r.data ?? [];
+        const totalCount = r.total ?? customers.length;
+        const pageSize = params.pageSize ?? 25;
+
+        return {
+          customers,
+          totalCount,
+          totalPages: Math.ceil(totalCount / pageSize),
+        } as CustomersQueryResult;
+      });
     },
     enabled: !!accountId,
   });
 
   return {
-    data: query.data ?? [],
+    data: query.data ?? { customers: [], totalCount: 0, totalPages: 0 },
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error,
