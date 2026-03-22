@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/stores/auth-store";
-import * as authService from "@/services/auth";
-import { apiPost } from "@/services/api-client";
+
 import { API_ROUTES, ROUTES } from "@/constants/routes";
+import { useAuthStore } from "@/stores/auth-store";
+import { apiPost } from "@/services/api-client";
+import * as authService from "@/services/auth";
 import type { NcbSession, ProvisionResponse } from "@/types";
 
 export function useAuth() {
@@ -14,7 +15,6 @@ export function useAuth() {
   const queryClient = useQueryClient();
   const store = useAuthStore();
 
-  // ── Session query ────────────────────────────
   const sessionQuery = useQuery<NcbSession | null>({
     queryKey: ["session"],
     queryFn: authService.getSession,
@@ -22,18 +22,17 @@ export function useAuth() {
     staleTime: 5 * 60 * 1000,
   });
 
-  // Sync session to store
   useEffect(() => {
     if (sessionQuery.isSuccess) {
       store.setSession(sessionQuery.data);
       store.setLoading(false);
     }
+
     if (sessionQuery.isError) {
       store.reset();
     }
-  }, [sessionQuery.data, sessionQuery.isSuccess, sessionQuery.isError]);
+  }, [sessionQuery.data, sessionQuery.isError, sessionQuery.isSuccess, store]);
 
-  // ── Auto-provision on first login ────────────
   const provisionMutation = useMutation<ProvisionResponse>({
     mutationFn: () => apiPost(API_ROUTES.provision),
     onSuccess: (data) => {
@@ -46,19 +45,30 @@ export function useAuth() {
     if (sessionQuery.data && !store.account) {
       provisionMutation.mutate();
     }
-  }, [sessionQuery.data]);
+  }, [provisionMutation, sessionQuery.data, store.account]);
 
-  // ── Sign in ──────────────────────────────────
   const signInMutation = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       authService.signIn(email, password),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["session"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["session"] });
       router.push(ROUTES.dashboard);
     },
   });
 
-  // ── Sign out ─────────────────────────────────
+  const sendOtpMutation = useMutation({
+    mutationFn: ({ email }: { email: string }) => authService.sendEmailOtp(email),
+  });
+
+  const verifyOtpMutation = useMutation({
+    mutationFn: ({ email, otp }: { email: string; otp: string }) =>
+      authService.verifyEmailOtp(email, otp),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["session"] });
+      router.push(ROUTES.dashboard);
+    },
+  });
+
   const signOutMutation = useMutation({
     mutationFn: authService.signOut,
     onSuccess: () => {
@@ -81,7 +91,13 @@ export function useAuth() {
 
     signIn: signInMutation.mutateAsync,
     signOut: signOutMutation.mutateAsync,
+    sendOtp: sendOtpMutation.mutateAsync,
+    verifyOtp: verifyOtpMutation.mutateAsync,
+
     signInLoading: signInMutation.isPending,
+    otpLoading: sendOtpMutation.isPending || verifyOtpMutation.isPending,
+
     signInError: signInMutation.error,
+    otpError: sendOtpMutation.error || verifyOtpMutation.error,
   };
 }
