@@ -123,8 +123,49 @@ This means the current codebase is **not** a Vite/Supabase-first frontend; it is
 - Status visibility and action handling
 - Assignment workflows
 - Provider-aware actions
-- PII-aware handling hooks
 - Order lifecycle reference: `docs/order-lifecycle.md`
+
+### Current PII behavior in orders
+
+The current repository does **not** implement a working order-PII fetch/decrypt flow.
+
+- `src/hooks/useOrderPii.ts` is a placeholder. `useOrderPii()` always returns `phone`, `email`, and `address` as `null`, `isLoading` as `false`, `isRevealed` as `false`, and a no-op `reveal()` function. `useCanViewPii()` always returns `{ canView: false, isAdmin: false }`.
+- Because `useCanViewPii()` is hard-coded to `false`, the orders list page masks customer phone numbers instead of revealing them.
+- On the orders list page, CRM-assigned operator phone numbers also go through the masking policy helper, so they are shown masked when a masked value is available and otherwise fall back to a locally masked raw phone value.
+- On the order details page, the only active PII-related display logic is the CRM operator phone helper. The page imports `useCanViewPii()`, but with the current placeholder hook it always resolves to the masked path.
+- `OrderCustomerCard` on the order details page is currently a placeholder component that renders `[OrderCustomerCard]`; it does not fetch, decrypt, or display customer PII today.
+- The invalidation of the React Query key `['order-pii', orderId]` on the order details page does not currently connect to an implemented query in this repository.
+- The repository currently contains a user-facing error string for `PII decryption failed`, but there is no corresponding decryption implementation in `useOrderPii.ts` or an order-PII query hook.
+
+### Current order PII access matrix
+
+Actual account roles currently defined in `src/types/index.ts` are:
+
+- `owner`
+- `admin`
+- `manager`
+- `staff`
+- `driver`
+
+Current behavior in this repository is the same for every listed role because `useCanViewPii()` always returns `false`.
+
+| Role | Can reveal customer phone/email/address via `useOrderPii()`? | What users currently experience in orders UI |
+|---|---:|---|
+| `owner` | No | Customer phone is masked in the orders list; no implemented reveal flow exists. |
+| `admin` | No | Customer phone is masked in the orders list; CRM operator phone is masked on list/detail pages. |
+| `manager` | No | Same current behavior as `owner` and `admin`. |
+| `staff` | No | Same current behavior as other roles. |
+| `driver` | No | Same current behavior as other roles. |
+
+### Planned / not yet implemented PII items
+
+The following names should be treated as planned or not yet implemented in the current codebase unless new code is added:
+
+- `system_admin` as a distinct PII-access role for orders
+- `order_customer_pii` claims/permissions
+- an implemented `order-pii` data query or reveal API flow
+- `PII_ENCRYPTION_KEY`
+- audit-log claims or audit-log enforcement tied to order PII reveal events
 
 ### Customers
 - Customer directory
