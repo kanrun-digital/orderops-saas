@@ -42,12 +42,15 @@ export const ROUTES = {
 
 export const API_ROUTES = {
   // Auth
-  signIn: "/api/auth/sign-in",
-  signUp: "/api/auth/sign-up",
+  signIn: "/api/auth/sign-in/email",
+  signUp: "/api/auth/sign-up/email",
   signOut: "/api/auth/sign-out",
   getSession: "/api/auth/get-session",
   provision: "/api/auth/provision",
-  googleAuth: "/api/auth/google",
+  googleAuth: "/api/auth/sign-in/social",
+  authProviders: "/api/auth-providers",
+  sendEmailOtp: "/api/auth/email-otp/send-verification-otp",
+  verifyEmailOtp: "/api/auth/sign-in/email-otp",
 
   // Data (generic — append table name)
   data: (table: string) => `/api/data/${table}`,
