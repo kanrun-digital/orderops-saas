@@ -10,8 +10,6 @@ import {
   ShoppingBag,
   Users,
   UtensilsCrossed,
-  Truck,
-  BarChart3,
   Settings,
   LogOut,
   Menu,
@@ -25,8 +23,6 @@ const NAV_ITEMS = [
   { label: "Orders", href: ROUTES.orders, icon: ShoppingBag },
   { label: "Customers", href: ROUTES.customers, icon: Users },
   { label: "Menu", href: ROUTES.menu, icon: UtensilsCrossed },
-  { label: "Drivers", href: ROUTES.drivers, icon: Truck },
-  { label: "Reports", href: ROUTES.reports, icon: BarChart3 },
   { label: "Settings", href: ROUTES.settings, icon: Settings },
 ];
 
