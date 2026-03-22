@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export const CONFIG = {
   instance: process.env.NCB_INSTANCE!,
   dataApiUrl: process.env.NCB_DATA_API_URL!,
-  authApiUrl: process.env.NCB_AUTH_API_URL!,
+  authApiUrl: process.env.NCB_API_URL || process.env.NCB_AUTH_API_URL || "",
   appUrl: process.env.NCB_APP_URL || "https://app.nocodebackend.com",
 };
 
@@ -25,23 +25,27 @@ export function extractAuthCookies(cookieHeader: string): string {
 
 export async function getSessionUser(cookieHeader: string): Promise<{ id: string } | null> {
   const authCookies = extractAuthCookies(cookieHeader);
-  if (!authCookies) return null;
+  if (!authCookies || !CONFIG.instance || !CONFIG.authApiUrl) return null;
 
-  const url = `${CONFIG.authApiUrl}/get-session?Instance=${CONFIG.instance}`;
-  const res = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Database-Instance": CONFIG.instance,
-      Cookie: authCookies,
-    },
-    cache: "no-store",
-  });
+  try {
+    const url = `${CONFIG.authApiUrl}/get-session?Instance=${CONFIG.instance}`;
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Database-Instance": CONFIG.instance,
+        Cookie: authCookies,
+      },
+      cache: "no-store",
+    });
 
-  if (!res.ok) return null;
+    if (!res.ok) return null;
 
-  const data = await res.json();
-  return data.user || null;
+    const data = await res.json();
+    return data.user || null;
+  } catch {
+    return null;
+  }
 }
 
 export async function proxyToNCB(req: NextRequest, path: string, body?: string) {

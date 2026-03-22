@@ -46,7 +46,7 @@ export function env(): NcbEnv {
   return {
     instance: process.env["NCB_INSTANCE"] || "",
     dataUrl: process.env["NCB_DATA_API_URL"] || "",
-    authUrl: process.env["NCB_AUTH_API_URL"] || "",
+    authUrl: process.env["NCB_API_URL"] || process.env["NCB_AUTH_API_URL"] || "",
     secretKey: process.env["NCB_SECRET_KEY"] || "",
   };
 }
@@ -267,18 +267,24 @@ export function getCookie(req: NextRequest): string {
 
 export async function getSession(cookie: string): Promise<NcbSession | null> {
   const e = env();
-  const url = `${e.authUrl}/get-session`;
-  const res = await fetch(url, {
-    headers: {
-      Instance: e.instance,
-      Cookie: cookie,
-    },
-    cache: "no-store",
-  });
-  if (!res.ok) return null;
-  const data: any = await res.json();
-  if (!data || !data.email) return null;
-  return data as NcbSession;
+  if (!cookie || !e.instance || !e.authUrl) return null;
+
+  try {
+    const url = `${e.authUrl}/get-session`;
+    const res = await fetch(url, {
+      headers: {
+        Instance: e.instance,
+        Cookie: cookie,
+      },
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    const data: any = await res.json();
+    if (!data || !data.email) return null;
+    return data as NcbSession;
+  } catch {
+    return null;
+  }
 }
 
 export async function requireAuth(req: NextRequest): Promise<NcbSession> {
