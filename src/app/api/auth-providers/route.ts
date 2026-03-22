@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getNcbAuthConfig } from "@/lib/ncb-auth-config";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   const config = getNcbAuthConfig();
 
   if (!config.instance || !config.apiUrl || !config.secretKey) {
@@ -16,6 +16,7 @@ export async function GET() {
     headers: {
       "X-Database-Instance": config.instance,
       Authorization: `Bearer ${config.secretKey}`,
+      Origin: req.headers.get("origin") || req.nextUrl.origin,
     },
   });
 
