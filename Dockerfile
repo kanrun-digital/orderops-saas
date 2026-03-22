@@ -17,23 +17,37 @@ RUN node - <<'NODE_DIAGNOSTIC'
 const fs = require('fs');
 const path = require('path');
 
-const packageName = '@tanstack/react-query';
-const packageJsonPath = `${packageName}/package.json`;
-const directPath = path.join(process.cwd(), 'node_modules', packageName);
+const packagesToCheck = [
+  '@tanstack/react-query',
+  '@tanstack/query-core',
+];
 
 console.log('[diagnostic] cwd =', process.cwd());
 console.log('[diagnostic] node version =', process.version);
-console.log('[diagnostic] direct path exists =', fs.existsSync(directPath), directPath);
 
-try {
-  const resolved = require.resolve(packageJsonPath);
-  const pkg = require(resolved);
-  console.log('[diagnostic] resolved package.json =', resolved);
-  console.log('[diagnostic] package version =', pkg.version);
-} catch (error) {
-  console.error('[diagnostic] failed to resolve @tanstack/react-query/package.json before next build');
-  console.error(error);
-  process.exit(1);
+for (const packageName of packagesToCheck) {
+  const packageJsonPath = `${packageName}/package.json`;
+  const directPath = path.join(process.cwd(), 'node_modules', packageName);
+  const directPathExists = fs.existsSync(directPath);
+
+  console.log(`[diagnostic] checking ${packageName}`);
+  console.log('[diagnostic] direct path exists =', directPathExists, directPath);
+
+  if (!directPathExists) {
+    console.error(`[diagnostic] missing package under node_modules: ${packageName}`);
+    process.exit(1);
+  }
+
+  try {
+    const resolved = require.resolve(packageJsonPath);
+    const pkg = require(resolved);
+    console.log('[diagnostic] resolved package.json =', resolved);
+    console.log('[diagnostic] package version =', pkg.version);
+  } catch (error) {
+    console.error(`[diagnostic] failed to resolve ${packageName}/package.json before next build`);
+    console.error(error);
+    process.exit(1);
+  }
 }
 NODE_DIAGNOSTIC
 
