@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const AUTH_URL = process.env["NCB_AUTH_URL"] || "https://app.nocodebackend.com/api/user-auth";
+const AUTH_URL = process.env["NCB_AUTH_API_URL"] || "";
 const INSTANCE = process.env["NCB_INSTANCE"] || "";
 
 async function handler(req: NextRequest) {
