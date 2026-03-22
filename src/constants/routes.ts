@@ -16,15 +16,13 @@ export const ROUTES = {
   customerDetail: (id: string) => `/customers/${id}`,
   customerSegments: "/customer-segments",
   customerSync: "/customer-sync",
+  chats: "/chats",
+  help: "/help",
   menu: "/menu",
   menuSources: "/menu-sources",
   menuMapping: "/menu-mapping",
   menuItem: (id: string) => `/menu/${id}`,
   settings: "/settings",
-  settingsTeam: "/settings/team",
-  settingsBilling: "/settings/billing",
-  settingsIntegrations: "/settings/integrations",
-  reports: "/reports",
   integrations: "/integrations",
   qrMenu: "/qr-menu",
   restaurants: "/restaurants",
@@ -34,8 +32,6 @@ export const ROUTES = {
   staff: "/staff",
   reviews: "/reviews",
   syncDashboard: "/sync-dashboard",
-  drivers: "/drivers",
-  driverDetail: (id: string) => `/drivers/${id}`,
 } as const;
 
 // ── API Routes ─────────────────────────────────
