@@ -1,24 +1,21 @@
 import { NextResponse } from "next/server";
-
-const NCB_CONFIG = {
-  instance: process.env.NCB_INSTANCE ?? "",
-  apiUrl: process.env.NCB_API_URL ?? "",
-  secretKey: process.env.NCB_SECRET_KEY ?? "",
-};
+import { getNcbAuthConfig } from "@/lib/ncb-auth-config";
 
 export async function GET() {
-  if (!NCB_CONFIG.instance || !NCB_CONFIG.apiUrl || !NCB_CONFIG.secretKey) {
+  const config = getNcbAuthConfig();
+
+  if (!config.instance || !config.apiUrl || !config.secretKey) {
     return NextResponse.json(
       { error: "Missing auth provider configuration", providers: {} },
       { status: 500 }
     );
   }
 
-  const response = await fetch(`${NCB_CONFIG.apiUrl}/providers?instance=${NCB_CONFIG.instance}`, {
+  const response = await fetch(`${config.apiUrl}/providers?instance=${config.instance}`, {
     cache: "no-store",
     headers: {
-      "X-Database-Instance": NCB_CONFIG.instance,
-      Authorization: `Bearer ${NCB_CONFIG.secretKey}`,
+      "X-Database-Instance": config.instance,
+      Authorization: `Bearer ${config.secretKey}`,
     },
   });
 
