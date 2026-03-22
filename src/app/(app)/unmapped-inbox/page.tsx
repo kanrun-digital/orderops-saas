@@ -14,6 +14,7 @@ import { PageHeader } from '@/components/app/PageHeader';
 import { SummaryBar } from '@/components/app/SummaryBar';
 import { DataToolbar } from '@/components/app/DataToolbar';
 import { StateBlock } from '@/components/app/StateBlock';
+import { ROUTES } from '@/constants/routes';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { useAllMenuProducts, useMenuCategories, useModifierGroups } from '@/hooks/useMenu';
 import { useProductMappingMatrix } from '@/hooks/useProductMappingMatrix';
@@ -137,7 +138,7 @@ export default function UnmappedInbox() {
           subtitle={t('unmappedInbox.subtitle')}
           actions={
             <Button asChild>
-              <Link href={`/app/menu/mapping?${mappingQuery}`}>
+              <Link href={`${ROUTES.menuMapping}?${mappingQuery}`}>
                 {t('unmappedInbox.openMapping')}
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Link>

@@ -23,6 +23,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import MarketingFooter from "@/components/marketing/MarketingFooter";
 import MarketingShell from "@/components/marketing/MarketingShell";
 import { useLanguageSwitcher } from "@/hooks/useLanguageSwitcher";
+import { ROUTES } from "@/constants/routes";
 
 const capabilityIcons = [Orbit, RefreshCcw, BarChart3, BadgeCheck, Users, Route, ShieldCheck, QrCode];
 const securityIcons = [Lock, ShieldCheck, DatabaseZap, Globe];
@@ -72,13 +73,13 @@ export function MarketingLandingPage() {
 
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Button asChild size="lg" className="rounded-full bg-slate-950 px-7 text-white hover:bg-slate-800">
-                  <Link href="/pilot">
+                  <Link href={ROUTES.pilot}>
                     {landing.primaryCta}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="rounded-full border-slate-300 bg-white/80 px-7">
-                  <Link href="/demo">{landing.secondaryCta}</Link>
+                  <Link href={ROUTES.demo}>{landing.secondaryCta}</Link>
                 </Button>
               </div>
 
@@ -354,7 +355,7 @@ export function MarketingLandingPage() {
                     ))}
                   </div>
                   <Button asChild className="mt-8 w-full rounded-full bg-white text-slate-950 hover:bg-slate-200">
-                    <Link href="/pilot">{plan.cta}</Link>
+                    <Link href={ROUTES.pilot}>{plan.cta}</Link>
                   </Button>
                 </div>
               ))}
@@ -388,10 +389,10 @@ export function MarketingLandingPage() {
               </div>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Button asChild size="lg" className="rounded-full bg-white text-slate-950 hover:bg-slate-200">
-                  <Link href="/pilot">{landing.finalCta.primary}</Link>
+                  <Link href={ROUTES.pilot}>{landing.finalCta.primary}</Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="rounded-full border-white/30 bg-white/5 text-white hover:bg-white/10">
-                  <Link href="/contact">{landing.finalCta.secondary}</Link>
+                  <Link href={ROUTES.contact}>{landing.finalCta.secondary}</Link>
                 </Button>
               </div>
             </div>

@@ -35,6 +35,7 @@ import { useCanViewPii } from '@/hooks/useOrderPii';
 import { getPhoneByPiiPolicy } from '@/lib/orders/piiPhone';
 import { resolveAssignedOperator } from '@/lib/orders/assignedOperator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { ROUTES } from '@/constants/routes';
 
 const t = (key: string) => key;
 
@@ -341,7 +342,7 @@ export default function OrderDetailsPage() {
     return (
       <AppLayout>
         <div className="space-y-6">
-          <Link href="/orders">
+          <Link href={ROUTES.orders}>
             <Button variant="ghost" className="gap-2">
               <ArrowLeft className="h-4 w-4" />
               {t('orders.backToOrders')}
@@ -406,7 +407,7 @@ export default function OrderDetailsPage() {
           title={`${t('orders.orderLabel')} #${order.id.slice(0, 8)}`}
           subtitle={t('orders.placedOn')}
           breadcrumbs={(
-            <Link href="/orders">
+            <Link href={ROUTES.orders}>
               <Button variant="ghost" size="sm" className="gap-2 -ml-2">
                 <ArrowLeft className="h-4 w-4" />
                 {t('orders.backToOrders')}

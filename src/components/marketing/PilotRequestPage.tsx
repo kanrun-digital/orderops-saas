@@ -10,6 +10,7 @@ import MarketingFooter from "@/components/marketing/MarketingFooter";
 import MarketingShell from "@/components/marketing/MarketingShell";
 import { Textarea } from "@/components/ui/textarea";
 import { useLanguageSwitcher } from "@/hooks/useLanguageSwitcher";
+import { ROUTES } from "@/constants/routes";
 
 type PilotFormState = {
   name: string;
@@ -132,10 +133,10 @@ export function PilotRequestPage() {
             <p className="mt-4 text-lg leading-8 text-slate-600">{pilot.success.subtitle}</p>
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
               <Button asChild className="rounded-full bg-slate-950 text-white hover:bg-slate-800">
-                <Link href="/demo">{pilot.actions.viewDemo}</Link>
+                <Link href={ROUTES.demo}>{pilot.actions.viewDemo}</Link>
               </Button>
               <Button asChild variant="outline" className="rounded-full">
-                <Link href="/">{copy.common.backHome}</Link>
+                <Link href={ROUTES.home}>{copy.common.backHome}</Link>
               </Button>
             </div>
           </div>
@@ -302,7 +303,7 @@ export function PilotRequestPage() {
                 <p className="mt-3 text-sm leading-7 text-slate-700">{pilot.sidebar.afterBody}</p>
                 <div className="mt-5">
                   <Button asChild variant="outline" className="rounded-full border-amber-300 bg-white">
-                    <Link href="/demo">{pilot.sidebar.previewDemo}</Link>
+                    <Link href={ROUTES.demo}>{pilot.sidebar.previewDemo}</Link>
                   </Button>
                 </div>
               </div>

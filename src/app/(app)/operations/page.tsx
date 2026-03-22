@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { ROUTES } from '@/constants/routes';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -390,9 +391,9 @@ export default function OperationsPage() {
                           (l: any) => l.syrve_terminal_group_id === terminal.syrve_terminal_id
                         );
                         if (linkedLocation) {
-                          router.push(`/app/restaurants?editLocationId=${(linkedLocation as any).id}`);
+                          router.push(`${ROUTES.restaurants}?editLocationId=${(linkedLocation as any).id}`);
                         } else {
-                          router.push('/app/restaurants');
+                          router.push(ROUTES.restaurants);
                           toast({ title: t('operations.linkTerminalHint') });
                         }
                       }}
@@ -493,7 +494,7 @@ export default function OperationsPage() {
                                 variant="ghost"
                                 size="icon"
                                 className="h-6 w-6"
-                                onClick={() => router.push(`/app/restaurants?editLocationId=${location.id}`)}
+                                onClick={() => router.push(`${ROUTES.restaurants}?editLocationId=${location.id}`)}
                               >
                                 <Pencil className="h-3 w-3" />
                               </Button>

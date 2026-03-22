@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { getSupportContactEmail, contactConfig } from "@/lib/config/contactConfig";
 import { useLanguageSwitcher } from "@/hooks/useLanguageSwitcher";
+import { ROUTES } from "@/constants/routes";
 
 export function MarketingFooter() {
   const supportEmail = getSupportContactEmail();
@@ -24,26 +25,26 @@ export function MarketingFooter() {
         <div>
           <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">{copy.common.explore}</h3>
           <div className="mt-4 flex flex-col gap-3 text-sm">
-            <a href="/#solution" className="text-slate-200 transition-colors hover:text-white">{copy.common.solution}</a>
-            <a href="/#integrations" className="text-slate-200 transition-colors hover:text-white">{copy.common.integrations}</a>
-            <a href="/#pricing" className="text-slate-200 transition-colors hover:text-white">{copy.common.pricing}</a>
+            <a href={`${ROUTES.home}#solution`} className="text-slate-200 transition-colors hover:text-white">{copy.common.solution}</a>
+            <a href={`${ROUTES.home}#integrations`} className="text-slate-200 transition-colors hover:text-white">{copy.common.integrations}</a>
+            <a href={`${ROUTES.home}#pricing`} className="text-slate-200 transition-colors hover:text-white">{copy.common.pricing}</a>
           </div>
         </div>
 
         <div>
           <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">{copy.common.publicPages}</h3>
           <div className="mt-4 flex flex-col gap-3 text-sm">
-            <Link href="/demo" className="text-slate-200 transition-colors hover:text-white">{copy.common.demo}</Link>
-            <Link href="/pilot" className="text-slate-200 transition-colors hover:text-white">{copy.common.pilot}</Link>
-            <Link href="/contact" className="text-slate-200 transition-colors hover:text-white">{copy.common.contact}</Link>
+            <Link href={ROUTES.demo} className="text-slate-200 transition-colors hover:text-white">{copy.common.demo}</Link>
+            <Link href={ROUTES.pilot} className="text-slate-200 transition-colors hover:text-white">{copy.common.pilot}</Link>
+            <Link href={ROUTES.contact} className="text-slate-200 transition-colors hover:text-white">{copy.common.contact}</Link>
           </div>
         </div>
 
         <div>
           <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">{copy.common.legal}</h3>
           <div className="mt-4 flex flex-col gap-3 text-sm">
-            <Link href="/privacy" className="text-slate-200 transition-colors hover:text-white">{copy.common.privacy}</Link>
-            <Link href="/terms" className="text-slate-200 transition-colors hover:text-white">{copy.common.terms}</Link>
+            <Link href={ROUTES.privacy} className="text-slate-200 transition-colors hover:text-white">{copy.common.privacy}</Link>
+            <Link href={ROUTES.terms} className="text-slate-200 transition-colors hover:text-white">{copy.common.terms}</Link>
             <a href={`mailto:${supportEmail}`} className="text-slate-200 transition-colors hover:text-white">{supportEmail}</a>
             {contactConfig.supportPhone ? <a href={`tel:${contactConfig.supportPhone}`} className="text-slate-200 transition-colors hover:text-white">{contactConfig.supportPhone}</a> : null}
           </div>

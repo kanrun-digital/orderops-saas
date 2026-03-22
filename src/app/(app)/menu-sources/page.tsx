@@ -17,6 +17,7 @@ import { Database, Package } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { MENU_CAPABLE_PROVIDERS, PROVIDER_CODES, type MenuCapableProvider } from '@/lib/constants/integrations';
+import { ROUTES } from '@/constants/routes';
 
 const t = (key: string) => key;
 
@@ -63,7 +64,7 @@ export default function MenuSourcesPage() {
             <Package className="h-16 w-16 text-muted-foreground mb-4" />
             <h2 className="text-xl font-semibold mb-2">{t('menuSources.noSources')}</h2>
             <p className="text-muted-foreground mb-4 max-w-md">{t('menuSources.connectHint')}</p>
-            <Button onClick={() => router.push('/app/integrations')}>{t('menuSources.goToConnections')}</Button>
+            <Button onClick={() => router.push(ROUTES.integrations)}>{t('menuSources.goToConnections')}</Button>
           </div>
         ) : (
           <Tabs value={effectiveTab} onValueChange={setActiveTab}>

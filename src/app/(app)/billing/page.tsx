@@ -19,6 +19,7 @@ import { CreditCard, Calendar, Mail, HelpCircle, ExternalLink } from 'lucide-rea
 import { SUBSCRIPTION_STATUS_STYLES } from '@/lib/constants/statusStyles';
 import { formatDateFns } from '@/lib/utils/formatDateTime';
 import { getSupportContactEmail } from '@/lib/config/contactConfig';
+import { ROUTES } from '@/constants/routes';
 
 const t = (key: string) => key;
 
@@ -227,7 +228,7 @@ export default function BillingPage() {
                   <a className="text-primary" href={`mailto:${supportEmail}`}>{supportEmail}</a>
                 </div>
                 <Button variant="outline" asChild>
-                  <Link href="/help">{t('billing.contactSupport')}</Link>
+                  <Link href={ROUTES.help}>{t('billing.contactSupport')}</Link>
                 </Button>
               </CardContent>
             </Card>

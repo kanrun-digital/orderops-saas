@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import MarketingShell from "@/components/marketing/MarketingShell";
 import MarketingFooter from "@/components/marketing/MarketingFooter";
 import { useLanguageSwitcher } from "@/hooks/useLanguageSwitcher";
+import { ROUTES } from "@/constants/routes";
 
 export function MarketingSimplePage({ pageKey }: { pageKey: "demo" | "contact" | "privacy" | "terms" }) {
   const { copy } = useLanguageSwitcher();
@@ -23,14 +24,14 @@ export function MarketingSimplePage({ pageKey }: { pageKey: "demo" | "contact" |
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           {"primaryCta" in page && page.primaryCta ? (
             <Button asChild className="rounded-full bg-slate-950 text-white hover:bg-slate-800">
-              <Link href="/pilot">
+              <Link href={ROUTES.pilot}>
                 {page.primaryCta}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           ) : null}
           <Button asChild variant="outline" className="rounded-full border-slate-300 bg-white">
-            <Link href="/">
+            <Link href={ROUTES.home}>
               <ArrowLeft className="mr-2 h-4 w-4" />
               {copy.common.backHome}
             </Link>
