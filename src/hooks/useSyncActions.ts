@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiGet, apiPost, apiPut } from "@/services/api-client";
 import { useAuthStore } from "@/stores/auth-store";
 
-export function useSyncActions(refetch?: () => void | Promise<void>) {
+export function useSyncActions(refetch?: () => void | Promise<unknown>) {
   const accountId = useAuthStore((s) => s.accountId);
   const queryClient = useQueryClient();
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
