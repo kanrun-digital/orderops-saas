@@ -134,7 +134,7 @@ export default function CustomerSyncStatus() {
   const cancelSalesboxSyncMutation = useCancelBackgroundSync(BACKGROUND_SYNC_JOB_TYPES.SYNC_SALESBOX_CUSTOMERS);
   const cancelBitrixImportMutation = useCancelBackgroundSync(BACKGROUND_SYNC_JOB_TYPES.SYNC_BITRIX_USERS);
   const cancelBitrixMatchMutation = useCancelBackgroundSync(BACKGROUND_SYNC_JOB_TYPES.BITRIX_AUTO_MATCH);
-  const { data: accountSettings } = useAccountSettings();
+  const { settings: accountSettings } = useAccountSettings();
   const updateAccountSettings = useUpdateAccountSettings();
 
   const { data: activeJobs = [] } = useActiveBackgroundSyncJobs();

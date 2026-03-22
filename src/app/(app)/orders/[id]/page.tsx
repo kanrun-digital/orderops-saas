@@ -1,5 +1,6 @@
 "use client";
 
+import { parseJsonSettings } from '@/lib/utils/settings';
 import { useState, useCallback, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
@@ -303,21 +304,8 @@ export default function OrderDetailsPage() {
   }, [data?.order, selectedOrg, locationConfig, refreshOrder, queryClient]);
 
   const autoSendEnabled = (() => {
-    if (!currentAccount?.settings || typeof currentAccount.settings !== 'object') {
-      return false;
-    }
-    if (Array.isArray(currentAccount.settings)) {
-      return false;
-    }
-    const settings = currentAccount.settings as Record<string, unknown>;
-    const direct = settings.auto_send_to_pos;
-    const nested =
-      settings.account_settings &&
-      typeof settings.account_settings === 'object' &&
-      !Array.isArray(settings.account_settings)
-        ? (settings.account_settings as Record<string, unknown>).auto_send_to_pos
-        : undefined;
-    return Boolean(direct ?? nested);
+    const settings = parseJsonSettings(currentAccount?.settings);
+    return Boolean(settings.auto_send_to_pos);
   })();
 
   if (isLoading) {

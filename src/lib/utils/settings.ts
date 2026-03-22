@@ -1,8 +1,26 @@
-export function getSetting<T>(key: string, fallback: T): T { return fallback; }
-export function setSetting(key: string, value: unknown): void {}
-export function getSettings(): Record<string, unknown> { return {}; }
+export type JsonSettingsValue = Record<string, unknown>;
 
-export function parseJsonSettings(json: string | null | undefined): Record<string, unknown> {
-  if (!json) return {};
-  try { return JSON.parse(json); } catch { return {}; }
+export function parseJsonSettings(value: string | JsonSettingsValue | null | undefined): JsonSettingsValue {
+  if (!value) return {};
+
+  if (typeof value === "object" && !Array.isArray(value)) {
+    return value;
+  }
+
+  if (typeof value !== "string") {
+    return {};
+  }
+
+  try {
+    const parsed = JSON.parse(value);
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+      ? (parsed as JsonSettingsValue)
+      : {};
+  } catch {
+    return {};
+  }
+}
+
+export function serializeJsonSettings(value: JsonSettingsValue | null | undefined): string {
+  return JSON.stringify(value ?? {});
 }
