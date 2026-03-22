@@ -18,8 +18,8 @@ export interface NcbSession {
   pk_id: number;
   id: string;
   email: string;
-  account_id: string;
-  role: string;
+  account_id?: string | null;
+  role?: string | null;
   [key: string]: any;
 }
 
