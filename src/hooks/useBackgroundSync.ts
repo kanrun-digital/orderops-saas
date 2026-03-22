@@ -4,6 +4,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiGet, apiPost, apiPut } from "@/services/api-client";
 import { useAuthStore } from "@/stores/auth-store";
 
+type BackgroundSyncMutationInput = Record<string, unknown>;
+
 export function useBackgroundSync() {
   const accountId = useAuthStore((s) => s.accountId);
   const queryClient = useQueryClient();
@@ -56,8 +58,8 @@ export function useStartBackgroundCustomerSync() {
   const accountId = useAuthStore((s) => s.accountId);
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
-    mutationFn: (data?: any) =>
+  const mutation = useMutation<unknown, Error, BackgroundSyncMutationInput>({
+    mutationFn: (data) =>
       apiPost(`/api/data/sync_jobs`, {
         account_id: accountId,
         job_type: "customer_sync",
@@ -71,8 +73,8 @@ export function useStartBackgroundCustomerSync() {
   });
 
   return {
-    mutate: mutation.mutate,
-    mutateAsync: mutation.mutateAsync,
+    mutate: (data: BackgroundSyncMutationInput = {}) => mutation.mutate(data),
+    mutateAsync: (data: BackgroundSyncMutationInput = {}) => mutation.mutateAsync(data),
     isLoading: mutation.isPending,
     isPending: mutation.isPending,
   };
@@ -82,8 +84,8 @@ export function useStartBackgroundBitrixSync() {
   const accountId = useAuthStore((s) => s.accountId);
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
-    mutationFn: (data?: any) =>
+  const mutation = useMutation<unknown, Error, BackgroundSyncMutationInput>({
+    mutationFn: (data) =>
       apiPost(`/api/data/sync_jobs`, {
         account_id: accountId,
         job_type: "bitrix_sync",
@@ -97,8 +99,8 @@ export function useStartBackgroundBitrixSync() {
   });
 
   return {
-    mutate: mutation.mutate,
-    mutateAsync: mutation.mutateAsync,
+    mutate: (data: BackgroundSyncMutationInput = {}) => mutation.mutate(data),
+    mutateAsync: (data: BackgroundSyncMutationInput = {}) => mutation.mutateAsync(data),
     isLoading: mutation.isPending,
     isPending: mutation.isPending,
   };
@@ -108,8 +110,8 @@ export function useStartBackgroundBitrixAutoMatch() {
   const accountId = useAuthStore((s) => s.accountId);
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
-    mutationFn: (data?: any) =>
+  const mutation = useMutation<unknown, Error, BackgroundSyncMutationInput>({
+    mutationFn: (data) =>
       apiPost(`/api/data/sync_jobs`, {
         account_id: accountId,
         job_type: "bitrix_auto_match",
@@ -123,8 +125,8 @@ export function useStartBackgroundBitrixAutoMatch() {
   });
 
   return {
-    mutate: mutation.mutate,
-    mutateAsync: mutation.mutateAsync,
+    mutate: (data: BackgroundSyncMutationInput = {}) => mutation.mutate(data),
+    mutateAsync: (data: BackgroundSyncMutationInput = {}) => mutation.mutateAsync(data),
     isLoading: mutation.isPending,
     isPending: mutation.isPending,
   };
@@ -134,8 +136,8 @@ export function useCancelBackgroundSync(jobType?: string) {
   const accountId = useAuthStore((s) => s.accountId);
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
-    mutationFn: async (data?: any) => {
+  const mutation = useMutation<unknown, Error, BackgroundSyncMutationInput>({
+    mutationFn: async (data) => {
       const jobId = data?.jobId ?? data?.pk_id;
       if (jobId) {
         return apiPut(`/api/data/sync_jobs/${jobId}`, { status: "cancelled" });
@@ -156,8 +158,8 @@ export function useCancelBackgroundSync(jobType?: string) {
   });
 
   return {
-    mutate: mutation.mutate,
-    mutateAsync: mutation.mutateAsync,
+    mutate: (data: BackgroundSyncMutationInput = {}) => mutation.mutate(data),
+    mutateAsync: (data: BackgroundSyncMutationInput = {}) => mutation.mutateAsync(data),
     isLoading: mutation.isPending,
     isPending: mutation.isPending,
   };

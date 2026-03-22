@@ -409,7 +409,7 @@ export default function CustomerSyncStatus() {
             <div className="flex flex-wrap gap-3">
               <div className="flex items-center gap-2">
                 <Button
-                  onClick={() => salesboxSyncMutation.mutate()}
+                  onClick={() => salesboxSyncMutation.mutate({})}
                   disabled={salesboxBusy}
                   variant="outline"
                 >
