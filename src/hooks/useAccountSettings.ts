@@ -1,44 +1,46 @@
 "use client";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { parseJsonSettings, serializeJsonSettings, type JsonSettingsValue } from "@/lib/utils/settings";
 import { apiGet, apiPut } from "@/services/api-client";
 import { useAuthStore } from "@/stores/auth-store";
 
+type AccountRecord = {
+  pk_id?: number;
+  id?: string;
+  settings?: string | JsonSettingsValue | null;
+  [key: string]: unknown;
+};
+
+async function fetchAccount(accountId: string) {
+  const response = await apiGet<{ data: AccountRecord[] }>(`/api/data/accounts?id=${accountId}`);
+  const account = response.data?.[0] ?? null;
+
+  if (!account) {
+    throw new Error("Account not found");
+  }
+
+  return account;
+}
+
 export function useAccountSettings() {
   const accountId = useAuthStore((s) => s.accountId);
-  const queryClient = useQueryClient();
 
   const query = useQuery({
     queryKey: ["account-settings", accountId],
-    queryFn: () =>
-      apiGet<{ data: any[] }>(`/api/data/accounts?id=${accountId}`).then(
-        (r) => r.data?.[0] ?? {}
-      ),
+    queryFn: () => fetchAccount(accountId as string),
     enabled: !!accountId,
+    select: (account) => ({
+      account,
+      settings: parseJsonSettings(account.settings),
+    }),
   });
 
-  const account = query.data ?? {};
-  const settings = typeof account.settings === "string"
-    ? JSON.parse(account.settings || "{}")
-    : account.settings ?? {};
-
-  const updateSetting = (key: string, value: unknown) => {
-    const newSettings = { ...settings, [key]: value };
-    if (account.pk_id) {
-      apiPut(`/api/data/accounts/${account.pk_id}`, {
-        settings: JSON.stringify(newSettings),
-      }).then(() => {
-        queryClient.invalidateQueries({ queryKey: ["account-settings"] });
-      });
-    }
-  };
-
   return {
-    data: account,
-    settings,
+    account: query.data?.account ?? null,
+    settings: query.data?.settings ?? {},
     isLoading: query.isLoading,
     error: query.error,
-    updateSetting,
     refetch: query.refetch,
   };
 }
@@ -48,11 +50,21 @@ export function useUpdateAccountSettings() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => {
-      const accountRes = await apiGet<{ data: any[] }>(`/api/data/accounts?id=${accountId}`);
-      const account = accountRes.data?.[0];
-      if (!account) throw new Error("Account not found");
-      return apiPut(`/api/data/accounts/${account.pk_id}`, data);
+    mutationFn: async (settingsPatch: JsonSettingsValue) => {
+      if (!accountId) {
+        throw new Error("Account not found");
+      }
+
+      const account = await fetchAccount(accountId);
+      const currentSettings = parseJsonSettings(account.settings);
+      const nextSettings = {
+        ...currentSettings,
+        ...settingsPatch,
+      };
+
+      return apiPut(`/api/data/accounts/${account.pk_id}`, {
+        settings: serializeJsonSettings(nextSettings),
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["account-settings"] });

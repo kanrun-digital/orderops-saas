@@ -1,5 +1,6 @@
 "use client";
 
+import { parseJsonSettings } from '@/lib/utils/settings';
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -403,17 +404,8 @@ export default function OrdersPage() {
   }, [accountIntegrations?.connections, currentLocation?.id]);
 
   const autoSendEnabled = useMemo(() => {
-    if (!currentAccount?.settings || typeof currentAccount.settings !== 'object') return false;
-    if (Array.isArray(currentAccount.settings)) return false;
-    const settings = currentAccount.settings as Record<string, unknown>;
-    const direct = settings.auto_send_to_pos;
-    const nested =
-      settings.account_settings &&
-      typeof settings.account_settings === 'object' &&
-      !Array.isArray(settings.account_settings)
-        ? (settings.account_settings as Record<string, unknown>).auto_send_to_pos
-        : undefined;
-    return Boolean(direct ?? nested);
+    const settings = parseJsonSettings(currentAccount?.settings);
+    return Boolean(settings.auto_send_to_pos);
   }, [currentAccount?.settings]);
 
   const organizationId = currentLocation?.syrve_org_id ?? null;

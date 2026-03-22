@@ -1,14 +1,11 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, Loader2, TriangleAlert } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAccountSettings } from "@/hooks/useAccountSettings";
-import { apiGet, apiPut, apiPost } from "@/services/api-client";
-import { useAuthStore } from "@/stores/auth-store";
+import { useAccountSettings, useUpdateAccountSettings } from "@/hooks/useAccountSettings";
 import { cn } from "@/lib/utils";
 
 interface SyncSettingsPanelProps {
@@ -35,9 +32,8 @@ const defaultSettings: ProviderSettings = {
 };
 
 export function SyncSettingsPanel({ provider, title, description, className }: SyncSettingsPanelProps) {
-  const accountId = useAuthStore((s) => s.accountId);
-  const queryClient = useQueryClient();
-  const { data: account, settings, isLoading } = useAccountSettings();
+  const { settings, isLoading } = useAccountSettings();
+  const updateAccountSettings = useUpdateAccountSettings();
   const providerSettingsFromAccount = useMemo(() => {
     const raw = settings?.[provider as keyof typeof settings] as Record<string, unknown> | undefined;
     return raw ?? {};
@@ -56,55 +52,25 @@ export function SyncSettingsPanel({ provider, title, description, className }: S
     });
   }, [providerSettingsFromAccount]);
 
-  const mutation = useMutation({
-    mutationFn: async () => {
-      if (!accountId) throw new Error("Account is not ready yet.");
-      const nextProviderSettings = {
-        ...providerSettingsFromAccount,
-        auto_sync: form.autoSync,
-        sync_interval_minutes: form.intervalMinutes,
-        sync_menu: form.syncMenu,
-        sync_orders: form.syncOrders,
-        sync_catalog: form.syncCatalog,
-        updated_at: new Date().toISOString(),
-      };
-
-      const mergedSettings = {
-        ...(settings ?? {}),
-        [provider]: nextProviderSettings,
-      };
-
-      const accountRow = account as Record<string, unknown>;
-      const accountPk = accountRow?.pk_id;
-      if (!accountPk) throw new Error("Account record was not found.");
-
-      await apiPut(`/api/data/accounts/${accountPk}`, {
-        settings: JSON.stringify(mergedSettings),
+  const handleSave = async () => {
+    try {
+      await updateAccountSettings.mutateAsync({
+        [provider]: {
+          ...providerSettingsFromAccount,
+          auto_sync: form.autoSync,
+          sync_interval_minutes: form.intervalMinutes,
+          sync_menu: form.syncMenu,
+          sync_orders: form.syncOrders,
+          sync_catalog: form.syncCatalog,
+          updated_at: new Date().toISOString(),
+        },
       });
-
-      const existing = await apiGet<{ data: any[] }>(`/api/data/integration_settings?account_id=${accountId}&provider=${provider}&_limit=1`);
-      const payload = {
-        id: existing.data?.[0]?.id ?? crypto.randomUUID(),
-        account_id: accountId,
-        provider,
-        settings: JSON.stringify(nextProviderSettings),
-      };
-
-      if (existing.data?.[0]?.pk_id) {
-        await apiPut(`/api/data/integration_settings/${existing.data[0].pk_id}`, payload);
-      } else {
-        await apiPost(`/api/data/integration_settings`, payload);
-      }
-    },
-    onSuccess: () => {
       setStatus({ type: "success", message: "Sync settings saved." });
-      queryClient.invalidateQueries({ queryKey: ["account-settings"] });
-      queryClient.invalidateQueries({ queryKey: ["connection-list"] });
-    },
-    onError: (error: Error) => {
-      setStatus({ type: "error", message: error.message || "Failed to save sync settings." });
-    },
-  });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to save sync settings.";
+      setStatus({ type: "error", message });
+    }
+  };
 
   const setField = <K extends keyof ProviderSettings>(key: K, value: ProviderSettings[K]) => {
     setStatus(null);
@@ -124,7 +90,7 @@ export function SyncSettingsPanel({ provider, title, description, className }: S
             <p className="text-sm font-medium">Auto-sync</p>
             <p className="text-sm text-muted-foreground">Run synchronization automatically for this provider.</p>
           </div>
-          <Switch checked={form.autoSync} onCheckedChange={(checked) => setField("autoSync", checked)} disabled={isLoading || mutation.isPending} />
+          <Switch checked={form.autoSync} onCheckedChange={(checked) => setField("autoSync", checked)} disabled={isLoading || updateAccountSettings.isPending} />
         </div>
 
         <label className="grid gap-2 text-sm md:max-w-xs">
@@ -135,7 +101,7 @@ export function SyncSettingsPanel({ provider, title, description, className }: S
             step={5}
             value={form.intervalMinutes}
             onChange={(e) => setField("intervalMinutes", Number(e.target.value) || 5)}
-            disabled={isLoading || mutation.isPending || !form.autoSync}
+            disabled={isLoading || updateAccountSettings.isPending || !form.autoSync}
           />
         </label>
 
@@ -154,7 +120,7 @@ export function SyncSettingsPanel({ provider, title, description, className }: S
                 <Switch
                   checked={form[key as keyof ProviderSettings] as boolean}
                   onCheckedChange={(checked) => setField(key as keyof ProviderSettings, checked as never)}
-                  disabled={isLoading || mutation.isPending}
+                  disabled={isLoading || updateAccountSettings.isPending}
                 />
               </div>
             </div>
@@ -163,9 +129,9 @@ export function SyncSettingsPanel({ provider, title, description, className }: S
       </div>
 
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm text-muted-foreground">Settings are loaded from account and provider configuration, then saved back through a mutation.</p>
-        <Button type="button" onClick={() => mutation.mutate()} disabled={isLoading || mutation.isPending || !accountId}>
-          {mutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+        <p className="text-sm text-muted-foreground">Settings are loaded from and saved back to accounts.settings for the current provider.</p>
+        <Button type="button" onClick={handleSave} disabled={isLoading || updateAccountSettings.isPending}>
+          {updateAccountSettings.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
           Save settings
         </Button>
       </div>

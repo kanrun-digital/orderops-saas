@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from 'react';
-import { parseJsonSettings } from '@/lib/utils/settings';
+import { parseJsonSettings, serializeJsonSettings } from '@/lib/utils/settings';
 import { useProfile, useUpdateProfile } from '@/hooks/useProfile';
 import { useAccount } from '@/contexts/AccountContext';
 import { useLanguageSwitcher } from '@/hooks/useLanguageSwitcher';
@@ -79,7 +79,7 @@ export default function SettingsPage() {
 
     setSavingNotifications(true);
 
-    const currentSettings = (currentAccount.settings as Record<string, unknown>) ?? {};
+    const currentSettings = parseJsonSettings(currentAccount.settings);
     const newSettings = {
       ...currentSettings,
       notification_email: trimmedEmail.length > 0 ? trimmedEmail : null,
@@ -90,7 +90,7 @@ export default function SettingsPage() {
       await updateByFilters({
         table: 'accounts',
         filters: { id: currentAccount.id },
-        data: { settings: newSettings },
+        data: { settings: serializeJsonSettings(newSettings) },
       });
 
       await refreshAccounts();

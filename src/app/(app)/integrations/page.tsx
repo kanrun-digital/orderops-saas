@@ -63,7 +63,7 @@ function ConnectionPanel({
   const { data: terminalGroups = [] } = useSyrveTerminalGroups(
     selectedOrgIds.length > 0 ? selectedOrgIds : undefined
   );
-  const { data: accountSettings } = useAccountSettings();
+  const { settings: accountSettings } = useAccountSettings();
 
   const isSyrve = conn.providerCode === PROVIDER_CODES.SYRVE;
   const typeBadge = isSyrve ? "POS" : isSalesboxOrBitrix ? "Channel" : null;
