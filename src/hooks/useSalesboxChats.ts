@@ -29,11 +29,18 @@ export function useSalesboxMarkChatRead() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (data: any) =>
-      apiPut(`/api/data/salesbox_chats/${data.pk_id}`, {
+    mutationFn: async (data: { chatId?: string; pk_id?: string }) => {
+      const chatId = data.chatId ?? data.pk_id;
+
+      if (!chatId) {
+        throw new Error("Missing chat identifier for mark-as-read mutation");
+      }
+
+      return apiPut(`/api/data/salesbox_chats/${chatId}`, {
         account_id: accountId,
         status: "read",
-      }),
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["salesbox-chats"] });
     },
