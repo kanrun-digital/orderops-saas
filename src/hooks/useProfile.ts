@@ -1,3 +1,9 @@
+"use client";
+
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiGet, apiPut } from "@/services/api-client";
+import { useAuthStore } from "@/stores/auth-store";
+
 interface ProfileData {
   id: string;
   email: string;
@@ -17,16 +23,56 @@ interface UseProfileResult {
 }
 
 export function useProfile(): UseProfileResult {
+  const accountId = useAuthStore((s) => s.accountId);
+  const session = useAuthStore((s) => s.session);
+  const isAdmin = useAuthStore((s) => s.isAdmin);
+  const queryClient = useQueryClient();
+
+  const query = useQuery({
+    queryKey: ["profile", session?.user_id],
+    queryFn: () =>
+      apiGet<{ data: any[] }>(
+        `/api/data/profiles?id=${session?.user_id}&_limit=1`
+      ).then((r) => {
+        const p = r.data?.[0];
+        if (!p) return null;
+        return {
+          id: p.id,
+          email: p.email ?? session?.email ?? "",
+          full_name: p.full_name ?? "",
+          role: session?.role ?? "staff",
+          avatar_url: p.avatar_url,
+        } as ProfileData;
+      }),
+    enabled: !!session?.user_id,
+  });
+
+  const profile = query.data ?? null;
+
+  const updateProfile = (data: Record<string, unknown>) => {
+    if (profile) {
+      apiGet<{ data: any[] }>(`/api/data/profiles?id=${profile.id}&_limit=1`).then((r) => {
+        const existing = r.data?.[0];
+        if (existing?.pk_id) {
+          apiPut(`/api/data/profiles/${existing.pk_id}`, data).then(() => {
+            queryClient.invalidateQueries({ queryKey: ["profile"] });
+          });
+        }
+      });
+    }
+  };
+
   return {
-    data: null,
-    user: null,
-    isLoading: false,
-    error: null,
-    isAdmin: false,
-    updateProfile: (_data: Record<string, unknown>) => {},
-    refetch: () => {},
+    data: profile,
+    user: profile,
+    isLoading: query.isLoading,
+    error: query.error,
+    isAdmin,
+    updateProfile,
+    refetch: query.refetch,
   };
 }
+
 export default useProfile;
 
 interface UseUpdateProfileResult {
@@ -38,11 +84,28 @@ interface UseUpdateProfileResult {
 }
 
 export function useUpdateProfile(): UseUpdateProfileResult {
+  const session = useAuthStore((s) => s.session);
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async (data: unknown) => {
+      const profileRes = await apiGet<{ data: any[] }>(
+        `/api/data/profiles?id=${session?.user_id}&_limit=1`
+      );
+      const existing = profileRes.data?.[0];
+      if (!existing?.pk_id) throw new Error("Profile not found");
+      await apiPut(`/api/data/profiles/${existing.pk_id}`, data as any);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+    },
+  });
+
   return {
-    mutate: (_data: unknown) => {},
-    mutateAsync: async (_data: unknown) => {},
-    isLoading: false,
-    isPending: false,
-    error: null,
+    mutate: mutation.mutate,
+    mutateAsync: mutation.mutateAsync as any,
+    isLoading: mutation.isPending,
+    isPending: mutation.isPending,
+    error: mutation.error,
   };
 }

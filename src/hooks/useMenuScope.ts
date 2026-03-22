@@ -1,9 +1,17 @@
+"use client";
+
+import { useState } from "react";
+
 export function useMenuScope() {
+  const [scope, setScope] = useState<string>("all");
+  const [provider, setProvider] = useState<string | null>(null);
+
   return {
-    scope: "all" as string,
-    setScope: (scope: string) => {},
-    provider: null as string | null,
-    setProvider: (provider: string | null) => {},
+    scope,
+    setScope,
+    provider,
+    setProvider,
   };
 }
+
 export default useMenuScope;

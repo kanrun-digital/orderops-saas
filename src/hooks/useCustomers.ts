@@ -1,3 +1,9 @@
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+import { apiGet } from "@/services/api-client";
+import { useAuthStore } from "@/stores/auth-store";
+
 export type CustomerSortColumn = 'name' | 'email' | 'created_at' | 'orders_count' | 'total_spent' | 'last_order_at';
 export type SortDirection = 'asc' | 'desc';
 export type SourceFilter = 'all' | 'salesbox' | 'syrve' | 'bitrix' | 'manual' | 'matched' | 'none';
@@ -63,15 +69,58 @@ export function buildCustomersQueryParams(params: UseCustomersParams = {}): UseC
 }
 
 export function useCustomers(params: UseCustomersParams = {}) {
+  const accountId = useAuthStore((s) => s.accountId);
   const queryParams = buildCustomersQueryParams(params);
 
+  const query = useQuery({
+    queryKey: ["customers", accountId, queryParams],
+    queryFn: () => {
+      const sp = new URLSearchParams();
+      sp.set("account_id", accountId!);
+      sp.set("_sort", params.sortColumn ?? "created_at");
+      sp.set("_order", params.sortDirection ?? "desc");
+      sp.set("_limit", String(params.pageSize ?? 25));
+      sp.set("includeTotal", "true");
+      if (params.page) sp.set("_page", String(params.page));
+
+      if (params.searchQuery) {
+        sp.set("name[like]", `%${params.searchQuery}%`);
+      }
+
+      switch (params.sourceFilter) {
+        case 'salesbox':
+          sp.set("salesbox_customer_id[gte]", "1");
+          break;
+        case 'bitrix':
+          sp.set("bitrix_customer_id[gte]", "1");
+          break;
+        case 'syrve':
+          sp.set("syrve_customer_id[gte]", "1");
+          break;
+        case 'matched':
+          // Customers with multiple source IDs
+          break;
+        case 'none':
+          // No external IDs
+          break;
+        default:
+          break;
+      }
+
+      return apiGet<{ data: any[]; total?: number }>(
+        `/api/data/customers?${sp.toString()}`
+      ).then((r) => r.data);
+    },
+    enabled: !!accountId,
+  });
+
   return {
-    data: [] as any,
-    isLoading: false,
-    isError: false,
-    error: null as Error | null,
-    refetch: () => {},
-    isFetching: false,
+    data: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
+    isFetching: query.isFetching,
     queryParams,
   };
 }
@@ -79,13 +128,60 @@ export function useCustomers(params: UseCustomersParams = {}) {
 export default useCustomers;
 
 export function useCustomer(id?: string) {
-  return { data: null as any, isLoading: false, error: null as Error | null, refetch: () => {} };
+  const accountId = useAuthStore((s) => s.accountId);
+
+  const query = useQuery({
+    queryKey: ["customer", accountId, id],
+    queryFn: () =>
+      apiGet<{ data: any[] }>(
+        `/api/data/customers?account_id=${accountId}&id=${id}&_limit=1`
+      ).then((r) => r.data?.[0] ?? null),
+    enabled: !!accountId && !!id,
+  });
+
+  return {
+    data: query.data ?? null,
+    isLoading: query.isLoading,
+    error: query.error,
+    refetch: query.refetch,
+  };
 }
 
 export function useCustomerOrders(customerId?: string) {
-  return { data: [] as any, isLoading: false, error: null as Error | null };
+  const accountId = useAuthStore((s) => s.accountId);
+
+  const query = useQuery({
+    queryKey: ["customer-orders", accountId, customerId],
+    queryFn: () =>
+      apiGet<{ data: any[] }>(
+        `/api/data/orders?account_id=${accountId}&customer_id=${customerId}&_sort=created_at&_order=desc&_limit=100`
+      ).then((r) => r.data),
+    enabled: !!accountId && !!customerId,
+  });
+
+  return {
+    data: query.data ?? [],
+    isLoading: query.isLoading,
+    error: query.error,
+  };
 }
 
 export function useNeedsReviewQueue(params?: any) {
-  return { data: [] as any, count: 0, isLoading: false, refetch: () => {} };
+  const accountId = useAuthStore((s) => s.accountId);
+
+  const query = useQuery({
+    queryKey: ["needs-review-queue", accountId, params],
+    queryFn: () =>
+      apiGet<{ data: any[]; total?: number }>(
+        `/api/data/customer_match_log?account_id=${accountId}&decision=needs_review&_sort=created_at&_order=desc&_limit=${params?.limit ?? 50}&includeTotal=true`
+      ).then((r) => ({ items: r.data ?? [], total: r.total ?? r.data?.length ?? 0 })),
+    enabled: !!accountId,
+  });
+
+  return {
+    data: query.data?.items ?? [],
+    count: query.data?.total ?? 0,
+    isLoading: query.isLoading,
+    refetch: query.refetch,
+  };
 }
