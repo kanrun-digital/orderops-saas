@@ -9,6 +9,7 @@ export const ROUTES = {
   terms: "/terms",
   login: "/login",
   signup: "/signup",
+  register: "/register",
   dashboard: "/dashboard",
   orders: "/orders",
   orderDetail: (id: string) => `/orders/${id}`,
