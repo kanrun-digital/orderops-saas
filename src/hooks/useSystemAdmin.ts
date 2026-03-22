@@ -5,17 +5,16 @@ import { apiGet } from "@/services/api-client";
 import { useAuthStore } from "@/stores/auth-store";
 
 export function useSystemAdmin() {
-  const accountId = useAuthStore((s) => s.accountId);
   const session = useAuthStore((s) => s.session);
   const isAdmin = useAuthStore((s) => s.isAdmin);
 
   const adminQuery = useQuery({
-    queryKey: ["system-admin", session?.user_id],
+    queryKey: ["system-admin", session?.id],
     queryFn: () =>
       apiGet<{ data: any[] }>(
-        `/api/data/user_roles?user_id=${session?.user_id}&role=system_admin&_limit=1`
+        `/api/data/user_roles?user_id=${session?.id}&role=system_admin&_limit=1`
       ).then((r) => (r.data?.length ?? 0) > 0),
-    enabled: !!session?.user_id,
+    enabled: !!session?.id,
   });
 
   const isSystemAdmin = adminQuery.data === true;

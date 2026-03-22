@@ -23,16 +23,15 @@ interface UseProfileResult {
 }
 
 export function useProfile(): UseProfileResult {
-  const accountId = useAuthStore((s) => s.accountId);
   const session = useAuthStore((s) => s.session);
   const isAdmin = useAuthStore((s) => s.isAdmin);
   const queryClient = useQueryClient();
 
   const query = useQuery({
-    queryKey: ["profile", session?.user_id],
+    queryKey: ["profile", session?.id],
     queryFn: () =>
       apiGet<{ data: any[] }>(
-        `/api/data/profiles?id=${session?.user_id}&_limit=1`
+        `/api/data/profiles?id=${session?.id}&_limit=1`
       ).then((r) => {
         const p = r.data?.[0];
         if (!p) return null;
@@ -44,7 +43,7 @@ export function useProfile(): UseProfileResult {
           avatar_url: p.avatar_url,
         } as ProfileData;
       }),
-    enabled: !!session?.user_id,
+    enabled: !!session?.id,
   });
 
   const profile = query.data ?? null;
@@ -90,7 +89,7 @@ export function useUpdateProfile(): UseUpdateProfileResult {
   const mutation = useMutation({
     mutationFn: async (data: unknown) => {
       const profileRes = await apiGet<{ data: any[] }>(
-        `/api/data/profiles?id=${session?.user_id}&_limit=1`
+        `/api/data/profiles?id=${session?.id}&_limit=1`
       );
       const existing = profileRes.data?.[0];
       if (!existing?.pk_id) throw new Error("Profile not found");
