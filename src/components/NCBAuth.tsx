@@ -27,6 +27,11 @@ const NCB_CONFIG = {
 
 const DEFAULT_PROVIDERS: AuthProviders = {};
 
+type ProvidersResponse = {
+  providers?: AuthProviders;
+  error?: string;
+};
+
 export default function NCBAuth({
   mode = "signin",
   onAuthSuccess,
@@ -36,6 +41,7 @@ export default function NCBAuth({
   const [currentView, setCurrentView] = useState<AuthMode | "otp">(mode);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<AuthSuccessPayload | null>(null);
+  const [providerLoadError, setProviderLoadError] = useState("");
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -56,16 +62,23 @@ export default function NCBAuth({
       credentials: "include",
     })
       .then(async (res) => {
-        const data = (await res.json().catch(() => ({ providers: DEFAULT_PROVIDERS }))) as {
-          providers?: AuthProviders;
-        };
+        const data = (await res.json().catch(() => ({}))) as ProvidersResponse;
         if (!active) return;
+
+        if (!res.ok) {
+          setProviders(null);
+          setProviderLoadError(data.error || "Authentication configuration error");
+          return;
+        }
+
         setProviders(data.providers ?? DEFAULT_PROVIDERS);
+        setProviderLoadError("");
       })
       .catch((err) => {
         console.error("Failed to fetch providers:", err);
         if (!active) return;
-        setProviders(DEFAULT_PROVIDERS);
+        setProviders(null);
+        setProviderLoadError("Failed to load sign-in providers");
       })
       .finally(() => {
         if (active) {
@@ -282,6 +295,12 @@ export default function NCBAuth({
         </p>
       </div>
 
+      {providerLoadError ? (
+        <div className="rounded-md border border-destructive/20 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          {providerLoadError}
+        </div>
+      ) : null}
+
       {error ? <div className="rounded-md border border-destructive/20 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div> : null}
 
       {currentView === "otp" ? (
@@ -375,7 +394,7 @@ export default function NCBAuth({
             </div>
           ) : null}
 
-          {providers?.email ? (
+          {!providerLoadError && providers?.email ? (
             <form onSubmit={currentView === "signin" ? handleEmailSignIn : handleEmailSignUp} className="space-y-4">
               {currentView === "signup" ? (
                 <div className="space-y-2">
@@ -433,13 +452,13 @@ export default function NCBAuth({
                 {formLoading ? "Loading…" : currentView === "signin" ? "Sign In" : "Sign Up"}
               </button>
             </form>
-          ) : (
+          ) : !providerLoadError ? (
             <p className="text-center text-sm text-muted-foreground">
               No sign-in methods are currently enabled. Please contact support.
             </p>
-          )}
+          ) : null}
 
-          {providers?.email ? (
+          {!providerLoadError && providers?.email ? (
             <p className="text-center text-sm text-muted-foreground">
               {currentView === "signin" ? "Don’t have an account?" : "Already have an account?"}{" "}
               <button
